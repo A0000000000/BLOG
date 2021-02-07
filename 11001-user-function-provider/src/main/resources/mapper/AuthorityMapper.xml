@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.a00000.blog.mapper.AuthorityMapper">
+    <select id="selectByNames" resultType="xyz.a00000.blog.bean.orm.Authority" parameterType="java.util.List">
+        select
+               id, authority_name as authorityName
+        from authority
+        where authority_name in
+        <foreach collection="authority" open="(" close=")" separator="," item="name">
+            #{name}
+        </foreach>
+    </select>
+</mapper>

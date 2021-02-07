@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.a00000.blog.mapper.CreatorAuthorityMapper">
+    <insert id="insertCreatorAuthorities" parameterType="java.util.List">
+        insert into creator_authority (creator_id, authority_id) values
+        <foreach collection="list" separator="," item="item">
+            (#{item.creatorId}, #{item.authorityId})
+        </foreach>
+    </insert>
+</mapper>

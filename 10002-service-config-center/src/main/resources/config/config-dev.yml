@@ -1,0 +1,15 @@
+mysql:
+  ip: 192.168.99.100
+  port: 20001
+  username: root
+  password: 1998
+  database: BLOG
+rabbitmq:
+  ip: 192.168.99.100
+  port: 20002
+  username: guest
+  password: guest
+redis:
+  ip: 192.168.99.100
+  port: 20003
+  auth: 1998

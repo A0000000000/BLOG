@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: service-gateway
+  cloud:
+    config:
+      uri: http://localhost:10002
+      name: config
+      profile: dev
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+eureka:
+  instance:
+    hostname: service-gateway
+  client:
+    service-url:
+      defaultZone: http://localhost:10001/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+logging:
+  level:
+    root: info
