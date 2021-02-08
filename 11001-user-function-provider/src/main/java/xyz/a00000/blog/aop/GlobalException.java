@@ -22,9 +22,9 @@ public class GlobalException {
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public BaseActionResult<Void> defaultErrorHandler(HttpServletRequest request, Exception e) {
+    public BaseActionResult<Object> defaultErrorHandler(HttpServletRequest request, Exception e) {
         log.info("访问地址不存在, 构建404返回数据.");
-        BaseActionResult<Void> res = new BaseActionResult<>();
+        BaseActionResult<Object> res = new BaseActionResult<>();
         CodeContrast codeContrast = null;
         if (e instanceof NoHandlerFoundException) {
             codeContrast = resultCodeTools.getCodeContrast(8);
@@ -38,6 +38,7 @@ public class GlobalException {
         }
         res.setCode(codeContrast.getCode());
         res.setMessage(codeContrast.getMessage());
+        res.setData(e);
         log.info("构建完成, 返回");
         return res;
     }
