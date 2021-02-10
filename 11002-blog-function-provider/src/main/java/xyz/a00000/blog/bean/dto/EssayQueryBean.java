@@ -8,6 +8,7 @@ import java.util.Date;
 @Data
 public class EssayQueryBean implements Serializable {
 
+    private Integer id;
     private String title;
     private Date createTime;
     private Boolean password;

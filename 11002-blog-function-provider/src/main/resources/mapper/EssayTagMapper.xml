@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.a00000.blog.mapper.EssayTagMapper">
+    <select id="selectByEssayId" parameterType="java.lang.Integer" resultType="xyz.a00000.blog.bean.orm.EssayTag">
+        select
+               id,
+               creator_id as creatorId,
+               tag_name as tagName,
+               create_time as createTime
+        from essay_tag
+        where id in (
+            select
+                   essay_tag_id
+            from essay_essay_tag
+            where essay_id = #{essayId}
+            )
+    </select>
+</mapper>

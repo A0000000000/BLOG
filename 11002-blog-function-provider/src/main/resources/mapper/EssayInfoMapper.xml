@@ -3,6 +3,7 @@
 <mapper namespace="xyz.a00000.blog.mapper.EssayInfoMapper">
     <select id="selectByPage" parameterType="xyz.a00000.blog.bean.common.PageForm" resultType="xyz.a00000.blog.bean.dto.EssayQueryBean">
         select
+               essay.id as id,
                title,
                create_time as createTime,
                if(isnull(essay_info.password) or essay_info.password = '', false, true) as password,
