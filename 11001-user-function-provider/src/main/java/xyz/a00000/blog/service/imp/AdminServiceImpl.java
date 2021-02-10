@@ -54,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
 
     public BaseServiceResult<String> generateRegisterId_fullback(String... authority) {
         log.info("generateRegisterId触发熔断, 进入熔断方法, 参数: " + Arrays.toString(authority));
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
 

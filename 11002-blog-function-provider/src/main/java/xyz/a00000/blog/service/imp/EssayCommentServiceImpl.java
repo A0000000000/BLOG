@@ -48,7 +48,7 @@ public class EssayCommentServiceImpl extends BaseServiceImpl<EssayComment, Essay
 
     public BaseServiceResult<EssayComment> addComment_fullback(EssayComment essayComment) {
         log.info("addComment方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class EssayCommentServiceImpl extends BaseServiceImpl<EssayComment, Essay
 
     public BaseServiceResult<Void> removeComment_fullback(EssayComment essayComment, UserDetailsBean currentUserDetails) {
         log.info("removeComment方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
 }

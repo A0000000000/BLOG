@@ -17,7 +17,7 @@
         join
              creator
         on
-            essay_info.creator_id = creator.id
+             essay_info.creator_id = creator.id
         <where>
             <if test="form.conditions != null">
                 <if test="form.conditions.id != null">

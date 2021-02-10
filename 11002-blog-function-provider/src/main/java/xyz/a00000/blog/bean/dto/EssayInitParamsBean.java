@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class EssayParams implements Serializable {
+public class EssayInitParamsBean implements Serializable {
 
     private String title;
     private String type;

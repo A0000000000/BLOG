@@ -107,6 +107,11 @@ public class CreatorServiceImpl extends BaseServiceImpl<Creator, CreatorMapper> 
         return BaseServiceResult.getSuccessBean(new UserView(creator, info, authorities));
     }
 
+    public BaseServiceResult<UserView> register_fullback(RegisterParams params) {
+        log.info("register触发熔断, 参数: " + params);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+    }
+
     @Override
     @HystrixCommand(fallbackMethod = "updateCreatorInfo_fullback",
             commandProperties = {
@@ -140,15 +145,9 @@ public class CreatorServiceImpl extends BaseServiceImpl<Creator, CreatorMapper> 
         return BaseServiceResult.getSuccessBean(new UserView(currentUserDetails.getCreator(), creatorInfo, null));
     }
 
-    public BaseServiceResult<UserView> register_fullback(RegisterParams params) {
-        log.info("register触发熔断, 参数: " + params);
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
-    }
-
     public BaseServiceResult<UserView> updateCreatorInfo_fullback(RegisterParams params, UserDetailsBean currentUserDetails) {
         log.info("updateCreatorInfo触发熔断, 参数: " + params);
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
-
 
 }

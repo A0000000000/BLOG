@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 import xyz.a00000.blog.bean.cache.EssayInitCache;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
 import xyz.a00000.blog.bean.dto.EssayInitResultBean;
-import xyz.a00000.blog.bean.dto.EssayParams;
+import xyz.a00000.blog.bean.dto.EssayInitParamsBean;
 import xyz.a00000.blog.bean.orm.Essay;
 import xyz.a00000.blog.bean.orm.EssayInfo;
 import xyz.a00000.blog.bean.orm.EssayType;
@@ -46,7 +46,7 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<EssayInitResultBean> createEssay(EssayParams params, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<EssayInitResultBean> createEssay(EssayInitParamsBean params, UserDetailsBean currentUserDetails) {
         log.info("进入初始化随笔的方法.");
         log.info("检查随笔参数是否正确.");
         if (StringUtils.isEmpty(params.getTitle()) || StringUtils.isEmpty(params.getType())) {
@@ -88,9 +88,9 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
         return BaseServiceResult.getSuccessBean(new EssayInitResultBean(cacheId, essay.getId(), essayInfo.getId()));
     }
 
-    public BaseServiceResult<EssayInitResultBean> createEssay_fullback(EssayParams params, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<EssayInitResultBean> createEssay_fullback(EssayInitParamsBean params, UserDetailsBean currentUserDetails) {
         log.info("initEssay方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
 
@@ -102,7 +102,7 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<String> updateEssay(EssayParams params, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<String> updateEssay(EssayInitParamsBean params, UserDetailsBean currentUserDetails) {
         log.info("进入更新随笔方法.");
         log.info("加载缓存.");
         EssayInitCache essayInitCache = cacheTools.getEssayInitCache(params.getData().getCacheId());
@@ -162,9 +162,9 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
         return BaseServiceResult.getSuccessBean(String.valueOf(essayInitCache.getEssay().getId()));
     }
 
-    public BaseServiceResult<String> updateEssay_fullback(EssayParams params, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<String> updateEssay_fullback(EssayInitParamsBean params, UserDetailsBean currentUserDetails) {
         log.info("updateEssay方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
 }

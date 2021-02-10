@@ -10,6 +10,7 @@ import xyz.a00000.blog.bean.common.BaseActionResult;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
 import xyz.a00000.blog.bean.common.PageBean;
 import xyz.a00000.blog.bean.common.PageForm;
+import xyz.a00000.blog.bean.dto.EssayProxyBean;
 import xyz.a00000.blog.bean.dto.EssayQueryBean;
 import xyz.a00000.blog.bean.orm.EssayInfo;
 import xyz.a00000.blog.component.ResultCodeTools;
@@ -34,5 +35,12 @@ public class ProviderController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
+    @PostMapping("/getEssayData")
+    public BaseActionResult<EssayProxyBean> getEssayData(@RequestBody EssayInfo essayInfo) {
+        log.info("查询一篇随笔的信息.");
+        BaseServiceResult<EssayProxyBean> result = providerService.getEssayData(essayInfo);
+        log.info("查询完成, 准备返回数据.");
+        return BaseActionResult.from(result, resultCodeTools);
+    }
 
 }

@@ -54,7 +54,7 @@ public class EssayTypeServiceImpl extends BaseServiceImpl<EssayType, EssayTypeMa
 
     public BaseServiceResult<PageBean<EssayType>> getEssayType_fullback(PageForm<Type> form) {
         log.info("getEssayType方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class EssayTypeServiceImpl extends BaseServiceImpl<EssayType, EssayTypeMa
 
     public BaseServiceResult<EssayType> createEssayType_fullback(EssayType type, UserDetailsBean userDetailsBean) {
         log.info("createEssayType方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class EssayTypeServiceImpl extends BaseServiceImpl<EssayType, EssayTypeMa
 
     public BaseServiceResult<EssayType> updateEssayType_fullback(EssayType type, UserDetailsBean userDetailsBean) {
         log.info("updateEssayType方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class EssayTypeServiceImpl extends BaseServiceImpl<EssayType, EssayTypeMa
 
     public BaseServiceResult<Void> deleteEssayType_fullback(EssayType type, UserDetailsBean userDetailsBean) {
         log.info("deleteEssayType方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
 }

@@ -83,7 +83,7 @@ public class EssayTagServiceImpl extends BaseServiceImpl<EssayTag, EssayTagMappe
 
     public BaseServiceResult<EssayTag> addNewTag_fullback(EssayTagParams params, UserDetailsBean currentUserDetails) {
         log.info("addNewTag方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class EssayTagServiceImpl extends BaseServiceImpl<EssayTag, EssayTagMappe
 
     public BaseServiceResult<Void> removeTag_fullback(EssayEssayTag essayEssayTag, UserDetailsBean currentUserDetails) {
         log.info("removeTag方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
 }

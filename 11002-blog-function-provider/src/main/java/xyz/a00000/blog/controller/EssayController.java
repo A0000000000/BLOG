@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.a00000.blog.bean.common.BaseActionResult;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
 import xyz.a00000.blog.bean.dto.EssayInitResultBean;
-import xyz.a00000.blog.bean.dto.EssayParams;
+import xyz.a00000.blog.bean.dto.EssayInitParamsBean;
 import xyz.a00000.blog.bean.proxy.UserDetailsBean;
 import xyz.a00000.blog.component.ResultCodeTools;
 import xyz.a00000.blog.component.SecurityTools;
@@ -29,7 +29,7 @@ public class EssayController {
     private EssayService essayService;
 
     @PostMapping("/createEssay")
-    public BaseActionResult<EssayInitResultBean> createEssay(@RequestBody EssayParams params) {
+    public BaseActionResult<EssayInitResultBean> createEssay(@RequestBody EssayInitParamsBean params) {
         log.info("初始化一篇随笔.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
@@ -40,7 +40,7 @@ public class EssayController {
     }
 
     @PostMapping("/updateEssay")
-    public BaseActionResult<String> updateEssay(@RequestBody EssayParams params) {
+    public BaseActionResult<String> updateEssay(@RequestBody EssayInitParamsBean params) {
         log.info("更新一篇随笔.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
