@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.a00000.blog.mapper.EssayInfoMapper">
+    <select id="selectByPage" parameterType="xyz.a00000.blog.bean.common.PageForm" resultType="xyz.a00000.blog.bean.dto.EssayQueryBean">
+        select
+               title,
+               create_time as createTime,
+               if(isnull(essay_info.password) or essay_info.password = '', false, true) as password,
+               star,
+               username as creator
+        from
+             essay_info
+        join
+             essay
+        on
+             essay_info.essay_id = essay.id
+        join
+             creator
+        on
+            essay_info.creator_id = creator.id
+        <where>
+            <if test="form.conditions != null">
+                <if test="form.conditions.id != null">
+                    and essay_info.id = #{form.conditions.id}
+                </if>
+                <if test="form.conditions.creatorId != null">
+                    and essay_info.creator_id = #{form.conditions.creatorId}
+                </if>
+                <if test="form.conditions.essayTypeId != null">
+                    and essay_info.essay_type_id = #{form.conditions.essayTypeId}
+                </if>
+                <if test="form.conditions.createTime != null">
+                    and essay_info.create_time = #{form.conditions.createTime}
+                </if>
+            </if>
+        </where>
+    </select>
+</mapper>
