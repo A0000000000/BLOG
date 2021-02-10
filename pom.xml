@@ -15,6 +15,7 @@
         <module>8080-service-gateway</module>
         <module>11001-user-function-provider</module>
         <module>11002-blog-function-provider</module>
+        <module>11003-async-task-provider</module>
     </modules>
 
 

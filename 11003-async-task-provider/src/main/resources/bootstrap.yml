@@ -1,0 +1,61 @@
+server:
+  port: 11003
+spring:
+  application:
+    name: async-task-provider
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  cloud:
+    config:
+      uri: http://localhost:10002
+      name: config
+      profile: dev
+  rabbitmq:
+    host: ${rabbitmq.ip}
+    port: ${rabbitmq.port}
+    username: ${rabbitmq.username}
+    password: ${rabbitmq.password}
+  redis:
+    host: ${redis.ip}
+    port: ${redis.port}
+    password: ${redis.auth}
+    timeout: 10000
+    database: 1
+    jedis:
+      pool:
+        max-active: 300
+        max-idle: 100
+        min-idle: 8
+        max-wait: -1ms
+  datasource:
+    url: jdbc:mysql://${mysql.ip}:${mysql.port}/${mysql.database}
+    username: ${mysql.username}
+    password: ${mysql.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.mchange.v2.c3p0.ComboPooledDataSource
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10001/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+security:
+  oauth2:
+    client:
+      client-id: A00000-blog
+      client-secret: A00000-blog-secret
+      user-authorization-uri: http://localhost:10003/api/oauth/authorize
+      access-token-uri: http://localhost:10003/api/oauth/token
+    resource:
+      id: A00000-blog
+      user-info-uri: A00000-blog
+    authorization:
+      check-token-access: http://localhost:10003/api/oauth/check_token
+mybatis-plus:
+  config-location: classpath:/mybatis-config.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
