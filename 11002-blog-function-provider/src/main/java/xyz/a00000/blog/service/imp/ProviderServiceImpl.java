@@ -13,14 +13,8 @@ import xyz.a00000.blog.bean.common.PageBean;
 import xyz.a00000.blog.bean.common.PageForm;
 import xyz.a00000.blog.bean.dto.EssayProxyBean;
 import xyz.a00000.blog.bean.dto.EssayQueryBean;
-import xyz.a00000.blog.bean.orm.Essay;
-import xyz.a00000.blog.bean.orm.EssayInfo;
-import xyz.a00000.blog.bean.orm.EssayTag;
-import xyz.a00000.blog.bean.orm.EssayType;
-import xyz.a00000.blog.mapper.EssayInfoMapper;
-import xyz.a00000.blog.mapper.EssayMapper;
-import xyz.a00000.blog.mapper.EssayTagMapper;
-import xyz.a00000.blog.mapper.EssayTypeMapper;
+import xyz.a00000.blog.bean.orm.*;
+import xyz.a00000.blog.mapper.*;
 import xyz.a00000.blog.service.ProviderService;
 
 import java.util.List;
@@ -36,6 +30,8 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
     private EssayTypeMapper essayTypeMapper;
     @Autowired
     private EssayTagMapper essayTagMapper;
+    @Autowired
+    private EssayCommentMapper essayCommentMapper;
 
     @Override
     @HystrixCommand(fallbackMethod = "getEssayList_fullback",
@@ -148,5 +144,33 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
+    @Override
+    @HystrixCommand(fallbackMethod = "getEssayComments_fullback",
+            commandProperties = {
+                    @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
+            })
+    public BaseServiceResult<PageBean<EssayComment>> getEssayComments(PageForm<EssayComment> form) {
+        log.info("加载随笔评论.");
+        log.info("检查参数.");
+        if (form.getConditions() == null || form.getConditions().getEssayId() == null) {
+            return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
+        }
+        log.info("加载用户评论.");
+        QueryWrapper<EssayComment> qwEssayComment = new QueryWrapper<>();
+        qwEssayComment.eq("essay_id", form.getConditions().getEssayId());
+        Integer sum = essayCommentMapper.selectCount(qwEssayComment);
+        PageBean<EssayComment> bean = PageBean.createPageBean(form, sum);
+        List<EssayComment> data = essayCommentMapper.selectByPage(form);
+        bean.setData(data);
+        return BaseServiceResult.getSuccessBean(bean);
+    }
+
+    public BaseServiceResult<PageBean<EssayComment>> getEssayComments_fullback(PageForm<EssayComment> form) {
+        log.info("getEssayComments方法发生熔断.");
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+    }
 
 }

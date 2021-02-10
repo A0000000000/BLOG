@@ -13,6 +13,7 @@ import xyz.a00000.blog.bean.common.PageForm;
 import xyz.a00000.blog.bean.dto.EssayProxyBean;
 import xyz.a00000.blog.bean.dto.EssayQueryBean;
 import xyz.a00000.blog.bean.orm.Essay;
+import xyz.a00000.blog.bean.orm.EssayComment;
 import xyz.a00000.blog.bean.orm.EssayInfo;
 import xyz.a00000.blog.bean.orm.EssayTag;
 import xyz.a00000.blog.component.ResultCodeTools;
@@ -52,6 +53,14 @@ public class ProviderController {
         log.info("查询一篇随笔的标签.");
         BaseServiceResult<List<EssayTag>> result = providerService.getEssayTags(essay);
         log.info("查询完成, 准备返回.");
+        return BaseActionResult.from(result, resultCodeTools);
+    }
+
+    @PostMapping("/getEssayComments")
+    public BaseActionResult<PageBean<EssayComment>> getEssayComments(@RequestBody PageForm<EssayComment> form) {
+        log.info("加载随笔评论.");
+        BaseServiceResult<PageBean<EssayComment>> result = providerService.getEssayComments(form);
+        log.info("加载完成, 准备返回.");
         return BaseActionResult.from(result, resultCodeTools);
     }
 

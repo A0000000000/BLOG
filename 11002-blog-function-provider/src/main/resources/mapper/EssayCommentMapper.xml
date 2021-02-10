@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.a00000.blog.mapper.EssayCommentMapper">
+
+    <select id="selectByPage" parameterType="xyz.a00000.blog.bean.common.PageForm" resultType="xyz.a00000.blog.bean.orm.EssayComment">
+        select
+               id,
+               essay_id as essayId,
+               nickname,
+               message,
+               comment_time as commentTime
+        from essay_comment
+        <where>
+            <if test="form.conditions != null">
+                <if test="form.conditions.id != null">
+                    and id = #{form.conditions.id}
+                </if>
+                <if test="form.conditions.essayId != null">
+                    and essay_id = #{form.conditions.essayId}
+                </if>
+                <if test="form.conditions.nickname != null and form.conditions.nickname != ''">
+                    and nickname like concat('%', #{form.conditions.nickname}, '%')
+                </if>
+                <if test="form.conditions.commentTime != null">
+                    and comment_time = #{form.conditions.commentTime}
+                </if>
+            </if>
+        </where>
+    </select>
+
+</mapper>
