@@ -3,6 +3,12 @@ server:
 spring:
   application:
     name: service-gateway
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 1MB
+      max-file-size: 20MB
+      max-request-size: 100MB
   cloud:
     config:
       uri: http://localhost:10002

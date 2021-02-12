@@ -59,6 +59,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/api/async/image/**").hasRole("CREATOR")
                 .anyRequest().permitAll()
                 .and()
                 .exceptionHandling()

@@ -3,6 +3,12 @@ server:
 spring:
   application:
     name: async-task-provider
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 1MB
+      max-file-size: 20MB
+      max-request-size: 100MB
   mvc:
     throw-exception-if-no-handler-found: true
   resources:
@@ -22,7 +28,7 @@ spring:
     port: ${redis.port}
     password: ${redis.auth}
     timeout: 10000
-    database: 1
+    database: 3
     jedis:
       pool:
         max-active: 300
@@ -59,3 +65,7 @@ security:
 mybatis-plus:
   config-location: classpath:/mybatis-config.xml
   mapper-locations: classpath:/mapper/*Mapper.xml
+minio:
+  endpoint: http://${minio.ip}:${minio.port}
+  accessKey: ${minio.access}
+  secretKey: ${minio.secret}

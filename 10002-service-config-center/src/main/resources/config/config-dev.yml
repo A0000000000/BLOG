@@ -13,3 +13,8 @@ redis:
   ip: 192.168.99.100
   port: 20003
   auth: 1998
+minio:
+  ip: 192.168.99.100
+  port: 20004
+  access: a00000
+  secret: Aa000000
