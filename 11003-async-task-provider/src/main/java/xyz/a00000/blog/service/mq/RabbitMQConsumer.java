@@ -14,6 +14,9 @@ import xyz.a00000.blog.bean.common.EmailBean;
 import xyz.a00000.blog.bean.common.ImageBean;
 import xyz.a00000.blog.bean.common.MessageBean;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+
 @EnableBinding(Sink.class)
 @Slf4j
 public class RabbitMQConsumer {
@@ -58,8 +61,12 @@ public class RabbitMQConsumer {
                     if (!minioClient.bucketExists(imageBean.getFileBucket())) {
                         minioClient.makeBucket(imageBean.getFileBucket());
                     }
-                    PutObjectOptions options = new PutObjectOptions(imageBean.getSource().getSize(), PutObjectOptions.MIN_MULTIPART_SIZE);
-                    minioClient.putObject(imageBean.getFileBucket(), imageBean.getFilename(), imageBean.getSource().getInputStream(), options);
+                    PutObjectOptions options = new PutObjectOptions(imageBean.getSize(), PutObjectOptions.MIN_MULTIPART_SIZE);
+                    try (InputStream is = new ByteArrayInputStream(imageBean.getData())) {
+                        minioClient.putObject(imageBean.getFileBucket(), imageBean.getFilename(), is, options);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

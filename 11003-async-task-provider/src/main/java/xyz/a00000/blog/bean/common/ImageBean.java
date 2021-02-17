@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 
@@ -18,9 +17,9 @@ public class ImageBean implements Serializable {
     @NonNull
     private String filename;
     @NonNull
-    private MultipartFile source;
-    @NonNull
     private String type;
+    private Long size;
+    private byte[] data;
 
     public static final String TYPE_SAVE = "SAVE";
     public static final String TYPE_DELETE = "DELETE";
