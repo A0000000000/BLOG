@@ -12,6 +12,8 @@ import xyz.a00000.blog.component.ResultCodeTools;
 import xyz.a00000.blog.component.SecurityTools;
 import xyz.a00000.blog.service.ImageService;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequestMapping("/api/async/image")
@@ -26,12 +28,12 @@ public class ImageController {
     private ImageService imageService;
 
     @PostMapping("/uploadImage")
-    public BaseActionResult<Image> uploadImage(@RequestParam("image") MultipartFile image, @RequestParam("essayId") Integer essayId, @RequestParam(value = "password", required = false) String password) {
+    public BaseActionResult<List<Image>> uploadImage(@RequestParam("images") MultipartFile[] images, @RequestParam("essayId") Integer essayId, @RequestParam(value = "password", required = false) String password) {
         log.info("上传一张图片.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
         log.info("上传图片.");
-        BaseServiceResult<Image> result = imageService.uploadImage(image, essayId, password, currentUserDetails);
+        BaseServiceResult<List<Image>> result = imageService.uploadImage(images, essayId, password, currentUserDetails);
         log.info("上传完成, 准备返回.");
         return BaseActionResult.from(result, resultCodeTools);
     }
