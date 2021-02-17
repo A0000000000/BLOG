@@ -18,6 +18,19 @@ spring:
       uri: http://localhost:10002
       name: config
       profile: dev
+    stream:
+      binders:
+        default-rabbit:
+          type: rabbit
+      bindings:
+        output:
+          destination: asyncTask
+          content-type: application/json
+          binder: default-rabbit
+        input:
+          destination: asyncTask
+          content-type: application/json
+          binder: default-rabbit
   rabbitmq:
     host: ${rabbitmq.ip}
     port: ${rabbitmq.port}
