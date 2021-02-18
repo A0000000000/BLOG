@@ -14,4 +14,6 @@ public interface ImageService extends BaseService<Image, ImageMapper> {
 
     BaseServiceResult<Void> deleteImage(Integer id, UserDetailsBean currentUserDetails);
 
+    BaseServiceResult<Void> deleteImageByEssayId(Integer essayId, UserDetailsBean currentUserDetails);
+
 }

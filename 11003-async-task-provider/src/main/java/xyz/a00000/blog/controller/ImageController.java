@@ -49,4 +49,15 @@ public class ImageController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
+    @PostMapping("/deleteImageByEssayId")
+    public BaseActionResult<Void> deleteImageByEssayId(@RequestParam("essayId") Integer essayId) {
+        log.info("根据随笔id删除随笔的图片.");
+        log.info("加载用户信息.");
+        UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
+        log.info("删除图片.");
+        BaseServiceResult<Void> result = imageService.deleteImageByEssayId(essayId, currentUserDetails);
+        log.info("删除完成, 准备返回.");
+        return BaseActionResult.from(result, resultCodeTools);
+    }
+
 }

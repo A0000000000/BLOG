@@ -144,4 +144,60 @@ public class ImageServiceImpl extends BaseServiceImpl<Image, ImageMapper> implem
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
     }
 
+    @Override
+    @HystrixCommand(fallbackMethod = "deleteImageByEssayId_fullback",
+            commandProperties = {
+                    @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
+            })
+    public BaseServiceResult<Void> deleteImageByEssayId(Integer essayId, UserDetailsBean currentUserDetails) {
+        log.info("准备删除图片.");
+        log.info("校验参数是否合法.");
+        if (essayId == null) {
+            return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
+        }
+        log.info("判断是否有权限删除.");
+        QueryWrapper<EssayInfo> qwEssayInfo = new QueryWrapper<>();
+        qwEssayInfo.eq("creator_id", currentUserDetails.getCreator().getId());
+        qwEssayInfo.eq("essay_id", essayId);
+        EssayInfo essayInfo = essayInfoMapper.selectOne(qwEssayInfo);
+        if (essayInfo == null) {
+            return BaseServiceResult.getFailedBean(new Exception("ACCESS_DENIED"), 7);
+        }
+        log.info("查询待删除的图片信息.");
+        QueryWrapper<Image> qwImage = new QueryWrapper<>();
+        qwImage.eq("creator_id", currentUserDetails.getCreator().getId());
+        qwImage.eq("essay_id", essayId);
+        List<Image> images = u.selectList(qwImage);
+        log.info("准备删除图片.");
+        if (images == null || images.size() == 0) {
+            return BaseServiceResult.getSuccessBean(null);
+        }
+        images.forEach(image -> {
+            log.info("构建删除信息的bean.");
+            ImageBean bean = new ImageBean(currentUserDetails.getCreatorInfo().getFileBucket(), image.getFilename(), ImageBean.TYPE_DELETE, null, null);
+            log.info("生成合法的key.");
+            String key = UUID.randomUUID().toString().replaceAll("-", "");
+            while (redisTemplate.hasKey(key)) {
+                key = UUID.randomUUID().toString().replaceAll("-", "");
+            }
+            ValueOperations<String, ImageBean> ops = redisTemplate.opsForValue();
+            log.info("将数据保存至redis.");
+            ops.set(key, bean);
+            log.info("将任务发送至消息队列.");
+            rabbitMQProvider.sendImage(key);
+            log.info("从数据库删除记录.");
+            u.deleteById(image.getId());
+        });
+        return BaseServiceResult.getSuccessBean(null);
+    }
+
+    public BaseServiceResult<Void> deleteImageByEssayId_fullback(Integer essayId, UserDetailsBean currentUserDetails) {
+        log.info("deleteImageByEssayId方法发生熔断.");
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+    }
+
+
 }
