@@ -32,7 +32,7 @@ public class EssayTagServiceImpl extends BaseServiceImpl<EssayTag, EssayTagMappe
     private EssayEssayTagMapper essayEssayTagMapper;
 
     @Override
-    @HystrixCommand(fallbackMethod = "addNewTag_fullback",
+    @HystrixCommand(fallbackMethod = "addNewTag_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -81,13 +81,13 @@ public class EssayTagServiceImpl extends BaseServiceImpl<EssayTag, EssayTagMappe
         return BaseServiceResult.getSuccessBean(essayTag);
     }
 
-    public BaseServiceResult<EssayTag> addNewTag_fullback(EssayTagParams params, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<EssayTag> addNewTag_fallback(EssayTagParams params, UserDetailsBean currentUserDetails) {
         log.info("addNewTag方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "removeTag_fullback",
+    @HystrixCommand(fallbackMethod = "removeTag_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -123,9 +123,9 @@ public class EssayTagServiceImpl extends BaseServiceImpl<EssayTag, EssayTagMappe
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> removeTag_fullback(EssayEssayTag essayEssayTag, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> removeTag_fallback(EssayEssayTag essayEssayTag, UserDetailsBean currentUserDetails) {
         log.info("removeTag方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
 }

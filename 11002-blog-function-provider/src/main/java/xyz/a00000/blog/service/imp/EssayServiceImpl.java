@@ -9,17 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import xyz.a00000.blog.bean.cache.EssayInitCache;
+import xyz.a00000.blog.bean.common.BaseActionResult;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
 import xyz.a00000.blog.bean.dto.EssayInitResultBean;
 import xyz.a00000.blog.bean.dto.EssayInitParamsBean;
-import xyz.a00000.blog.bean.orm.Essay;
-import xyz.a00000.blog.bean.orm.EssayInfo;
-import xyz.a00000.blog.bean.orm.EssayType;
+import xyz.a00000.blog.bean.orm.*;
 import xyz.a00000.blog.bean.proxy.UserDetailsBean;
 import xyz.a00000.blog.component.CacheTools;
-import xyz.a00000.blog.mapper.EssayInfoMapper;
-import xyz.a00000.blog.mapper.EssayMapper;
-import xyz.a00000.blog.mapper.EssayTypeMapper;
+import xyz.a00000.blog.feign.ImageFeign;
+import xyz.a00000.blog.mapper.*;
 import xyz.a00000.blog.service.EssayService;
 
 import java.util.Date;
@@ -34,12 +32,19 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
     private EssayTypeMapper essayTypeMapper;
     @Autowired
     private EssayInfoMapper essayInfoMapper;
+    @Autowired
+    private EssayEssayTagMapper essayEssayTagMapper;
+    @Autowired
+    private EssayCommentMapper essayCommentMapper;
 
     @Autowired
     private CacheTools cacheTools;
 
+    @Autowired
+    private ImageFeign imageFeign;
+
     @Override
-    @HystrixCommand(fallbackMethod = "createEssay_fullback",
+    @HystrixCommand(fallbackMethod = "createEssay_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -88,14 +93,14 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
         return BaseServiceResult.getSuccessBean(new EssayInitResultBean(cacheId, essay.getId(), essayInfo.getId()));
     }
 
-    public BaseServiceResult<EssayInitResultBean> createEssay_fullback(EssayInitParamsBean params, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<EssayInitResultBean> createEssay_fallback(EssayInitParamsBean params, UserDetailsBean currentUserDetails) {
         log.info("initEssay方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
 
     @Override
-    @HystrixCommand(fallbackMethod = "updateEssay_fullback",
+    @HystrixCommand(fallbackMethod = "updateEssay_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -162,9 +167,57 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
         return BaseServiceResult.getSuccessBean(String.valueOf(essayInitCache.getEssay().getId()));
     }
 
-    public BaseServiceResult<String> updateEssay_fullback(EssayInitParamsBean params, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<String> updateEssay_fallback(EssayInitParamsBean params, UserDetailsBean currentUserDetails) {
         log.info("updateEssay方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+    }
+
+
+    @Override
+    @HystrixCommand(fallbackMethod = "deleteEssay_fallback",
+            commandProperties = {
+                    @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
+            })
+    public BaseServiceResult<Void> deleteEssay(Essay essay, String authorization, UserDetailsBean currentUserDetails) {
+        log.info("准备删除一篇随笔.");
+        log.info("校验参数.");
+        if (essay == null || authorization == null || essay.getId() == null) {
+            return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
+        }
+        log.info("检查是否有权限删除.");
+        QueryWrapper<EssayInfo> qwEssayInfo = new QueryWrapper<>();
+        qwEssayInfo.eq("essay_id", essay.getId());
+        EssayInfo info = essayInfoMapper.selectOne(qwEssayInfo);
+        if (info == null || !currentUserDetails.getCreator().getId().equals(info.getCreatorId())) {
+            return BaseServiceResult.getFailedBean(new Exception("ACCESS_DENIED"), 7);
+        }
+        log.info("删除随笔相关的图片.");
+        BaseActionResult<Void> deleteImageResult = imageFeign.deleteImageByEssayId(essay.getId(), authorization);
+        if (deleteImageResult.getCode() != 0) {
+            return BaseServiceResult.getFailedBean(new Exception(deleteImageResult.getMessage()), deleteImageResult.getCode());
+        }
+        log.info("删除随笔相关的标签.");
+        QueryWrapper<EssayEssayTag> qwEssayEssayTag = new QueryWrapper<>();
+        qwEssayEssayTag.eq("essay_id", essay.getId());
+        essayEssayTagMapper.delete(qwEssayEssayTag);
+        log.info("删除随笔相关的评论.");
+        QueryWrapper<EssayComment> qwEssayComment = new QueryWrapper<>();
+        qwEssayComment.eq("essay_id", essay.getId());
+        essayCommentMapper.delete(qwEssayComment);
+        log.info("删除随笔的附加信息.");
+        essayInfoMapper.deleteById(info.getId());
+        log.info("删除随笔.");
+        u.deleteById(essay.getId());
+        log.info("返回结果数据.");
+        return BaseServiceResult.getSuccessBean(null);
+    }
+
+    public BaseServiceResult<Void> deleteEssay_fallback(Essay essay, String authorization, UserDetailsBean currentUserDetails) {
+        log.info("updateEssay方法发生熔断.");
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
 }

@@ -13,4 +13,6 @@ public interface EssayService extends BaseService<Essay, EssayMapper> {
 
     BaseServiceResult<String> updateEssay(EssayInitParamsBean params, UserDetailsBean currentUserDetails);
 
+    BaseServiceResult<Void> deleteEssay(Essay essay, String authorization, UserDetailsBean currentUserDetails);
+
 }

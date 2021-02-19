@@ -43,7 +43,7 @@ public class ImageServiceImpl extends BaseServiceImpl<Image, ImageMapper> implem
     private DateTools dateTools;
 
     @Override
-    @HystrixCommand(fallbackMethod = "uploadImage_fullback",
+    @HystrixCommand(fallbackMethod = "uploadImage_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -100,13 +100,13 @@ public class ImageServiceImpl extends BaseServiceImpl<Image, ImageMapper> implem
         }
     }
 
-    public BaseServiceResult<List<Image>> uploadImage_fullback(MultipartFile[] images, Integer essayId, String password, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<List<Image>> uploadImage_fallback(MultipartFile[] images, Integer essayId, String password, UserDetailsBean currentUserDetails) {
         log.info("uploadImage方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "deleteImage_fullback",
+    @HystrixCommand(fallbackMethod = "deleteImage_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -139,13 +139,13 @@ public class ImageServiceImpl extends BaseServiceImpl<Image, ImageMapper> implem
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> deleteImage_fullback(Integer id, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> deleteImage_fallback(Integer id, UserDetailsBean currentUserDetails) {
         log.info("deleteImage方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "deleteImageByEssayId_fullback",
+    @HystrixCommand(fallbackMethod = "deleteImageByEssayId_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -194,9 +194,9 @@ public class ImageServiceImpl extends BaseServiceImpl<Image, ImageMapper> implem
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> deleteImageByEssayId_fullback(Integer essayId, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> deleteImageByEssayId_fallback(Integer essayId, UserDetailsBean currentUserDetails) {
         log.info("deleteImageByEssayId方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
 

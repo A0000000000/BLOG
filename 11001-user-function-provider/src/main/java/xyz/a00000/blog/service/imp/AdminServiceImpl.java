@@ -32,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
     private SystemConfigTools systemConfigTools;
 
     @Override
-    @HystrixCommand(fallbackMethod = "generateRegisterId_fullback",
+    @HystrixCommand(fallbackMethod = "generateRegisterId_fallback",
             commandProperties = {
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -52,9 +52,9 @@ public class AdminServiceImpl implements AdminService {
         return BaseServiceResult.getSuccessBean(id);
     }
 
-    public BaseServiceResult<String> generateRegisterId_fullback(String... authority) {
+    public BaseServiceResult<String> generateRegisterId_fallback(String... authority) {
         log.info("generateRegisterId触发熔断, 进入熔断方法, 参数: " + Arrays.toString(authority));
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
 

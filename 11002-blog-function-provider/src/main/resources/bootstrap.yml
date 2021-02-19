@@ -59,3 +59,18 @@ security:
 mybatis-plus:
   config-location: classpath:/mybatis-config.xml
   mapper-locations: classpath:/mapper/*Mapper.xml
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
+feign:
+  hystrix:
+    enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 50000

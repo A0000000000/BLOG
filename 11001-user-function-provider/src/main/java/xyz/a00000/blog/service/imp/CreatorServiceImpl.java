@@ -46,7 +46,7 @@ public class CreatorServiceImpl extends BaseServiceImpl<Creator, CreatorMapper> 
     private CreatorAuthorityMapper creatorAuthorityMapper;
 
     @Override
-    @HystrixCommand(fallbackMethod = "register_fullback",
+    @HystrixCommand(fallbackMethod = "register_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -107,13 +107,13 @@ public class CreatorServiceImpl extends BaseServiceImpl<Creator, CreatorMapper> 
         return BaseServiceResult.getSuccessBean(new UserView(creator, info, authorities));
     }
 
-    public BaseServiceResult<UserView> register_fullback(RegisterParams params) {
+    public BaseServiceResult<UserView> register_fallback(RegisterParams params) {
         log.info("register触发熔断, 参数: " + params);
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "updateCreatorInfo_fullback",
+    @HystrixCommand(fallbackMethod = "updateCreatorInfo_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -145,9 +145,9 @@ public class CreatorServiceImpl extends BaseServiceImpl<Creator, CreatorMapper> 
         return BaseServiceResult.getSuccessBean(new UserView(currentUserDetails.getCreator(), creatorInfo, null));
     }
 
-    public BaseServiceResult<UserView> updateCreatorInfo_fullback(RegisterParams params, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<UserView> updateCreatorInfo_fallback(RegisterParams params, UserDetailsBean currentUserDetails) {
         log.info("updateCreatorInfo触发熔断, 参数: " + params);
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
 }

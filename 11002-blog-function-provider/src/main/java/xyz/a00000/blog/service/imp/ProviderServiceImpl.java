@@ -34,7 +34,7 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
     private EssayCommentMapper essayCommentMapper;
 
     @Override
-    @HystrixCommand(fallbackMethod = "getEssayList_fullback",
+    @HystrixCommand(fallbackMethod = "getEssayList_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -78,13 +78,13 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
         return BaseServiceResult.getSuccessBean(bean);
     }
 
-    public BaseServiceResult<PageBean<EssayQueryBean>> getEssayList_fullback(PageForm<EssayInfo> form) {
+    public BaseServiceResult<PageBean<EssayQueryBean>> getEssayList_fallback(PageForm<EssayInfo> form) {
         log.info("getEssayList方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "getEssayData_fullback",
+    @HystrixCommand(fallbackMethod = "getEssayData_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -114,13 +114,13 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
         return BaseServiceResult.getSuccessBean(new EssayProxyBean(essay, one, type));
     }
 
-    public BaseServiceResult<EssayProxyBean> getEssayData_fullback(EssayInfo essayInfo) {
+    public BaseServiceResult<EssayProxyBean> getEssayData_fallback(EssayInfo essayInfo) {
         log.info("getEssayData方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "getEssayTags_fullback",
+    @HystrixCommand(fallbackMethod = "getEssayTags_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -139,13 +139,13 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
         return BaseServiceResult.getSuccessBean(data);
     }
 
-    public BaseServiceResult<List<EssayTag>> getEssayTags_fullback(Essay essay) {
+    public BaseServiceResult<List<EssayTag>> getEssayTags_fallback(Essay essay) {
         log.info("getEssayTags方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "getEssayComments_fullback",
+    @HystrixCommand(fallbackMethod = "getEssayComments_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -168,9 +168,9 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
         return BaseServiceResult.getSuccessBean(bean);
     }
 
-    public BaseServiceResult<PageBean<EssayComment>> getEssayComments_fullback(PageForm<EssayComment> form) {
+    public BaseServiceResult<PageBean<EssayComment>> getEssayComments_fallback(PageForm<EssayComment> form) {
         log.info("getEssayComments方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
 }

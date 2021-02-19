@@ -27,7 +27,7 @@ public class EssayCommentServiceImpl extends BaseServiceImpl<EssayComment, Essay
     private EssayInfoMapper essayInfoMapper;
 
     @Override
-    @HystrixCommand(fallbackMethod = "addComment_fullback",
+    @HystrixCommand(fallbackMethod = "addComment_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -46,13 +46,13 @@ public class EssayCommentServiceImpl extends BaseServiceImpl<EssayComment, Essay
         return BaseServiceResult.getSuccessBean(essayComment);
     }
 
-    public BaseServiceResult<EssayComment> addComment_fullback(EssayComment essayComment) {
+    public BaseServiceResult<EssayComment> addComment_fallback(EssayComment essayComment) {
         log.info("addComment方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "removeComment_fullback",
+    @HystrixCommand(fallbackMethod = "removeComment_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
@@ -80,9 +80,9 @@ public class EssayCommentServiceImpl extends BaseServiceImpl<EssayComment, Essay
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> removeComment_fullback(EssayComment essayComment, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> removeComment_fallback(EssayComment essayComment, UserDetailsBean currentUserDetails) {
         log.info("removeComment方法发生熔断.");
-        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FULLBACK"), 3);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
 }
