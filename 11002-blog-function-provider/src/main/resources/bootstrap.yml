@@ -11,7 +11,7 @@ spring:
     config:
       uri: http://localhost:10002
       name: config
-      profile: dev
+      profile: prod
   rabbitmq:
     host: ${rabbitmq.ip}
     port: ${rabbitmq.port}

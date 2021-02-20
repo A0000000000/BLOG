@@ -1,28 +1,30 @@
 mysql:
-  ip: 192.168.99.100
-  port: 20001
-  username: root
-  password: 1998
-  database: BLOG
+  ip: mysql的ip
+  port: mysql端口
+  username: mysql用户名
+  password: mysql密码
+  database: mysql所操作的数据库
 rabbitmq:
-  ip: 192.168.99.100
-  port: 20002
-  username: guest
-  password: guest
+  ip: rabbitmq的ip
+  port: rabbitmq的端口
+  username: rabbitmq的用户名
+  password: rabbitmq的密码
 redis:
-  ip: 192.168.99.100
-  port: 20003
-  auth: 1998
+  ip: redis的ip
+  port: redis的端口
+  auth: redis的密码
 minio:
-  ip: 192.168.99.100
-  port: 20004
-  access: a00000
-  secret: Aa000000
+  ip: minio的ip
+  port: minio的端口
+  access: minio的访问key
+  secret: minio的密钥
 email:
-  host: smtp.qq.com
-  username: 1938772251@qq.com
-  password: zmpcbseybrddcdeh
-  from: 1938772251@qq.com
+  host: 邮件提供者的地址
+  username: 邮箱的发信人
+  password: 收件人
+  from: 邮箱的发信人
   auth:
-    key: A00000
-    token: Aa.000000
+    key: 访问发送邮件接口的key
+    token: 访问发送邮件接口的token
+
+# 使用方法, 完成本文件的配置, 生成config-prod.yml, 防止与本文相同的目录
