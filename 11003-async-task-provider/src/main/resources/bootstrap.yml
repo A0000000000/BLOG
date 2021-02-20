@@ -55,10 +55,10 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.mchange.v2.c3p0.ComboPooledDataSource
   mail:
-    host: smtp.qq.com
-    username: 1938772251@qq.com
-    password: zmpcbseybrddcdeh
-    from: 1938772251@qq.com
+    host: ${email.host}
+    username: ${email.username}
+    password: ${email.password}
+    from: ${email.from}
     properties:
       mail:
         smtp:
@@ -98,5 +98,5 @@ minio:
   accessKey: ${minio.access}
   secretKey: ${minio.secret}
 email:
-  key: A00000
-  token: Aa.000000
+  key: ${email.auth.key}
+  token: ${email.auth.token}
