@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class EmailInterceptor implements HandlerInterceptor {
 
-    @Value("${email.key}")
+    @Value("${emailAuth.key}")
     private String key;
-    @Value("${email.token}")
+    @Value("${emailAuth.token}")
     private String token;
 
     @Autowired

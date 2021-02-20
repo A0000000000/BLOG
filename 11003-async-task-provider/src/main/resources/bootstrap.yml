@@ -97,6 +97,6 @@ minio:
   endpoint: http://${minio.ip}:${minio.port}
   accessKey: ${minio.access}
   secretKey: ${minio.secret}
-email:
+emailAuth:
   key: ${email.auth.key}
   token: ${email.auth.token}

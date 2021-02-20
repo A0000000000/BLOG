@@ -18,3 +18,11 @@ minio:
   port: 20004
   access: a00000
   secret: Aa000000
+email:
+  host: smtp.qq.com
+  username: 1938772251@qq.com
+  password: zmpcbseybrddcdeh
+  from: 1938772251@qq.com
+  auth:
+    key: A00000
+    token: Aa.000000
