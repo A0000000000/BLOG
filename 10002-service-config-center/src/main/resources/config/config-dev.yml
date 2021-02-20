@@ -27,4 +27,4 @@ email:
     key: 访问发送邮件接口的key
     token: 访问发送邮件接口的token
 
-# 使用方法, 完成本文件的配置, 生成config-prod.yml, 防止与本文相同的目录
+# 使用方法, 完成本文件的配置, 生成config-prod.yml, 放置于与本文件相同的目录
