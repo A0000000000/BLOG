@@ -54,6 +54,21 @@ spring:
     password: ${mysql.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.mchange.v2.c3p0.ComboPooledDataSource
+  mail:
+    host: smtp.qq.com
+    username: 1938772251@qq.com
+    password: zmpcbseybrddcdeh
+    from: 1938772251@qq.com
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+          port: 465
+    default-encoding: UTF-8
 eureka:
   client:
     service-url:
@@ -82,3 +97,6 @@ minio:
   endpoint: http://${minio.ip}:${minio.port}
   accessKey: ${minio.access}
   secretKey: ${minio.secret}
+email:
+  key: A00000
+  token: Aa.000000

@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import xyz.a00000.blog.bean.orm.Authority;
 import xyz.a00000.blog.bean.orm.Creator;
 import xyz.a00000.blog.bean.orm.CreatorInfo;
@@ -18,6 +20,7 @@ import xyz.a00000.blog.mapper.AuthorityMapper;
 import xyz.a00000.blog.mapper.CreatorInfoMapper;
 import xyz.a00000.blog.mapper.CreatorMapper;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -57,6 +60,22 @@ public class SecurityTools {
             return new UserDetailsBean(creator, authorities.stream().map(AuthorityBean::new).collect(Collectors.toList()), creatorInfo);
         } catch (Exception ignore) {
             log.info("用户信息获取失败, 原因: " + ignore.getMessage());
+        }
+        return null;
+    }
+
+    public String getAuthorization() {
+        try {
+            log.info("通过RequestContextHolder获取ServletRequestAttributes");
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            log.info("获取请求对象.");
+            HttpServletRequest request = attributes.getRequest();
+            log.info("获取请求授权密钥.");
+            String authorization = request.getHeader("Authorization");
+            log.info("授权密钥: " + authorization);
+            return authorization;
+        } catch (Exception ignore) {
+            log.info("登录密钥获取失败, 原因: " + ignore.getMessage());
         }
         return null;
     }

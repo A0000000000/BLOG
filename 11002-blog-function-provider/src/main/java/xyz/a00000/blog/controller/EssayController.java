@@ -6,19 +6,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import xyz.a00000.blog.bean.common.BaseActionResult;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
-import xyz.a00000.blog.bean.dto.EssayInitResultBean;
 import xyz.a00000.blog.bean.dto.EssayInitParamsBean;
+import xyz.a00000.blog.bean.dto.EssayInitResultBean;
 import xyz.a00000.blog.bean.orm.Essay;
 import xyz.a00000.blog.bean.proxy.UserDetailsBean;
 import xyz.a00000.blog.component.ResultCodeTools;
 import xyz.a00000.blog.component.SecurityTools;
 import xyz.a00000.blog.service.EssayService;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Slf4j
@@ -60,12 +56,8 @@ public class EssayController {
         log.info("删除一篇随笔.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        log.info("获取请求对象.");
-        HttpServletRequest request = attributes.getRequest();
-        log.info("获取请求授权密钥.");
-        String authorization = request.getHeader("Authorization");
-        log.info("授权密钥: " + authorization);
+        log.info("获取登录的用户密钥.");
+        String authorization = securityTools.getAuthorization();
         log.info("删除随笔.");
         BaseServiceResult<Void> result = essayService.deleteEssay(essay, authorization, currentUserDetails);
         log.info("删除成功, 准备返回.");

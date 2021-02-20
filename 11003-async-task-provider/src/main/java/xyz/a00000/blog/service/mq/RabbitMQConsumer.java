@@ -4,11 +4,14 @@ import io.minio.MinioClient;
 import io.minio.PutObjectOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.messaging.Message;
 import xyz.a00000.blog.bean.common.EmailBean;
 import xyz.a00000.blog.bean.common.ImageBean;
@@ -28,6 +31,11 @@ public class RabbitMQConsumer {
 
     @Autowired
     private MinioClient minioClient;
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Value("${spring.mail.from}")
+    private String from;
 
     @StreamListener(Sink.INPUT)
     public void inputMessageBean(Message<MessageBean> message) {
@@ -96,7 +104,19 @@ public class RabbitMQConsumer {
             ValueOperations<String, EmailBean> ops = emailRedisTemplate.opsForValue();
             EmailBean emailBean = ops.get(id);
             emailRedisTemplate.delete(id);
-            log.info(emailBean.toString());
+            if (emailBean != null) {
+                log.info("构建发送邮件的对象.");
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom(from);
+                message.setTo(emailBean.getReceiver());
+                message.setSubject(emailBean.getSubject());
+                message.setText(emailBean.getText());
+                log.info("构建完成, 准备发送邮件.");
+                mailSender.send(message);
+                log.info("发送完成.");
+            } else {
+                log.info("发送邮件的Bean不存在.");
+            }
         }
     }
 

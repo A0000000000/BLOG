@@ -1,9 +1,7 @@
 package xyz.a00000.blog.bean.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import xyz.a00000.blog.bean.orm.Email;
 
 import java.io.Serializable;
 
@@ -13,8 +11,15 @@ import java.io.Serializable;
 @ToString
 public class EmailBean implements Serializable {
 
-    private String sender;
+    @NonNull
     private String receiver;
-    private String content;
+    private String subject;
+    private String text;
+
+    public EmailBean(Email email) {
+        this.receiver = email.getReceiver();
+        this.subject = email.getSubject();
+        this.text = email.getText();
+    }
 
 }
