@@ -5,14 +5,14 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import xyz.a00000.blog.bean.common.PageForm;
-import xyz.a00000.blog.bean.orm.CodeContrast;
+import xyz.a00000.blog.bean.orm.SystemConfig;
 
 import java.util.List;
 
 @Mapper
 @Repository
-public interface CodeContrastMapper extends BaseMapper<CodeContrast> {
+public interface SystemConfigMapper extends BaseMapper<SystemConfig> {
 
-    List<CodeContrast> selectByForm(@Param("form") PageForm<CodeContrast> form);
+    List<SystemConfig> selectByForm(@Param("form") PageForm<SystemConfig> form);
 
 }

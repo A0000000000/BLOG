@@ -9,7 +9,6 @@ import xyz.a00000.blog.bean.common.PageBean;
 import xyz.a00000.blog.bean.common.PageForm;
 import xyz.a00000.blog.bean.orm.CodeContrast;
 import xyz.a00000.blog.component.ResultCodeTools;
-import xyz.a00000.blog.service.BaseService;
 import xyz.a00000.blog.service.CodeContrastService;
 
 @RestController
@@ -23,7 +22,6 @@ public class CodeContrastController {
     @Autowired
     private ResultCodeTools resultCodeTools;
 
-
     @GetMapping("/getCodeContrastById/{id}")
     public BaseActionResult<CodeContrast> getCodeContrastById(@PathVariable("id") Integer id) {
         log.info("获取一条记录.");
@@ -32,10 +30,12 @@ public class CodeContrastController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/getCodeContrastByFrom")
-    public BaseActionResult<PageBean<CodeContrast>> getCodeContrastByFrom(@RequestBody PageForm<CodeContrast> form) {
-
-        return null;
+    @PostMapping("/getCodeContrastByForm")
+    public BaseActionResult<PageBean<CodeContrast>> getCodeContrastByForm(@RequestBody PageForm<CodeContrast> form) {
+        log.info("分页查询数据.");
+        BaseServiceResult<PageBean<CodeContrast>> result = codeContrastService.getCodeContrastByForm(form);
+        log.info("查询完成, 准备返回.");
+        return BaseActionResult.from(result, resultCodeTools);
     }
 
     @PostMapping("createCodeContrast")
@@ -54,7 +54,7 @@ public class CodeContrastController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @DeleteMapping("/deleteCodeContrast")
+    @DeleteMapping("/deleteCodeContrast/{id}")
     public BaseActionResult<Void> deleteCodeContrast(@PathVariable("id") Integer id) {
         log.info("删除一条记录.");
         codeContrastService.delete(id);

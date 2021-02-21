@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import xyz.a00000.blog.bean.cache.EssayInitCache;
+import xyz.a00000.blog.bean.orm.SystemConfig;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,13 +17,14 @@ public class CacheTools {
 
     @Autowired
     private RedisTemplate<String, EssayInitCache> essayInitCacheRedisTemplate;
-
-    public static final int timeout = 86400;
+    @Autowired
+    private SystemConfigTools systemConfigTools;
 
     public void setEssayInitCache(EssayInitCache essayInitCache) {
         log.info("向缓存中存入一条缓存记录.");
         ValueOperations<String, EssayInitCache> ops = essayInitCacheRedisTemplate.opsForValue();
-        ops.set(essayInitCache.getCacheId(), essayInitCache, timeout, TimeUnit.SECONDS);
+        SystemConfig config = systemConfigTools.getSystemConfig("register_token_expire");
+        ops.set(essayInitCache.getCacheId(), essayInitCache, Long.parseLong(config.getValue()), TimeUnit.SECONDS);
         log.info("缓存成功.");
     }
 

@@ -8,14 +8,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
+import xyz.a00000.blog.bean.common.PageBean;
+import xyz.a00000.blog.bean.common.PageForm;
 import xyz.a00000.blog.bean.orm.CodeContrast;
 import xyz.a00000.blog.mapper.CodeContrastMapper;
 import xyz.a00000.blog.service.CodeContrastService;
+
+import java.util.List;
 
 @Service
 @Transactional
 @Slf4j
 public class CodeContrastServiceImpl extends BaseServiceImpl<CodeContrast, CodeContrastMapper> implements CodeContrastService {
+
+    @Override
+    @HystrixCommand(fallbackMethod = "getCodeContrastByForm_fallback",
+            commandProperties = {
+                    @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
+            })
+    public BaseServiceResult<PageBean<CodeContrast>> getCodeContrastByForm(PageForm<CodeContrast> form) {
+        log.info("分页查询数据.");
+        Integer sum = u.selectCount(null);
+        log.info("构建返回的数据对象, 校验并修正参数.");
+        PageBean<CodeContrast> bean = PageBean.createPageBean(form, sum);
+        log.info("查询具体的数据.");
+        List<CodeContrast> data = u.selectByForm(form);
+        log.info("将数据设置到返回的对象中, 并返回.");
+        bean.setData(data);
+        return BaseServiceResult.getSuccessBean(bean);
+    }
+
+    public BaseServiceResult<PageBean<CodeContrast>> getCodeContrastByForm_fallback(PageForm<CodeContrast> form) {
+        log.info("getCodeContrastByForm发生熔断.");
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+    }
 
     @Override
     @HystrixCommand(fallbackMethod = "createCodeContrast_fallback",

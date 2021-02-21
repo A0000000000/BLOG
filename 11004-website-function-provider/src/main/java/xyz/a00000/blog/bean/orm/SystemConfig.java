@@ -7,8 +7,8 @@ import lombok.Data;
 
 import java.io.Serializable;
 
-@Data
 @TableName("system_config")
+@Data
 public class SystemConfig implements Serializable {
 
     @TableId(type = IdType.AUTO)
