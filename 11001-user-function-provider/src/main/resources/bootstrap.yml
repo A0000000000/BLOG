@@ -30,7 +30,7 @@ spring:
         min-idle: 8
         max-wait: -1ms
   datasource:
-    url: jdbc:mysql://${mysql.ip}:${mysql.port}/${mysql.database}
+    url: jdbc:mysql://${mysql.ip}:${mysql.port}/${mysql.database}?${mysql.config}
     username: ${mysql.username}
     password: ${mysql.password}
     driver-class-name: com.mysql.cj.jdbc.Driver

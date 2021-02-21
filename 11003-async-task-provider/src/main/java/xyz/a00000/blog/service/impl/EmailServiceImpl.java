@@ -1,4 +1,4 @@
-package xyz.a00000.blog.service.imp;
+package xyz.a00000.blog.service.impl;
 
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;

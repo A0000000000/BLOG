@@ -15,6 +15,7 @@ public class GatewayConfig {
                 .route("user_function_provider_route", r -> r.path("/api/user/**").uri("lb://USER-FUNCTION-PROVIDER"))
                 .route("blog_function_provider_route", r -> r.path("/api/blog/**").uri("lb://BLOG-FUNCTION-PROVIDER"))
                 .route("async_task_provider_route", r -> r.path("/api/async/**").uri("lb://ASYNC-TASK-PROVIDER"))
+                .route("website_function_provider_route", r -> r.path("/api/website/**").uri("lb://WEBSITE-FUNCTION-PROVIDER"))
                 .build();
     }
 
