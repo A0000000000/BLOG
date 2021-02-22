@@ -97,13 +97,13 @@ public class SystemConfigServiceImpl extends BaseServiceImpl<SystemConfig, Syste
         if (current == null) {
             return BaseServiceResult.getFailedBean(new Exception("NO_RECORD"), 9);
         }
-        if (StringUtils.isEmpty(systemConfig.getName())) {
+        if (!StringUtils.isEmpty(systemConfig.getName())) {
             current.setName(systemConfig.getName());
         }
-        if (StringUtils.isEmpty(systemConfig.getValue())) {
+        if (!StringUtils.isEmpty(systemConfig.getValue())) {
             current.setValue(systemConfig.getValue());
         }
-        if (StringUtils.isEmpty(systemConfig.getInfo())) {
+        if (!StringUtils.isEmpty(systemConfig.getInfo())) {
             current.setInfo(systemConfig.getInfo());
         }
         log.info("准备更新数据.");

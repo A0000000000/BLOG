@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.a00000.blog.mapper.EmailMapper">
+    <select id="selectByForm" parameterType="xyz.a00000.blog.bean.common.PageForm" resultType="xyz.a00000.blog.bean.orm.Email">
+        select * from email
+        <where>
+            <if test="form.conditions != null">
+                <if test="form.conditions.id != null">
+                    and id = #{form.conditions.id}
+                </if>
+                <if test="form.conditions.receiver != null and form.conditions.receiver != ''">
+                    and receiver like concat('%', #{form.conditions.receiver}, '%')
+                </if>
+                <if test="form.conditions.subject != null and form.conditions.subject != ''">
+                    and subject like concat('%', #{form.conditions.subject}, '%')
+                </if>
+                <if test="form.conditions.text != null and form.conditions.text != ''">
+                    and text like concat('%', #{form.conditions.text}, '%')
+                </if>
+            </if>
+        </where>
+    </select>
+</mapper>

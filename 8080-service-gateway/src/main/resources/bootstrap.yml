@@ -18,6 +18,12 @@ spring:
       discovery:
         locator:
           enabled: true
+  datasource:
+    url: jdbc:mysql://${mysql.ip}:${mysql.port}/${mysql.database}?${mysql.config}
+    username: ${mysql.username}
+    password: ${mysql.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.mchange.v2.c3p0.ComboPooledDataSource
 eureka:
   instance:
     hostname: service-gateway
@@ -32,3 +38,6 @@ management:
 logging:
   level:
     root: info
+mybatis-plus:
+  config-location: classpath:/mybatis-config.xml
+  mapper-locations: classpath:/mapper/*Mapper.xml
