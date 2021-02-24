@@ -64,20 +64,4 @@ public class SecurityTools {
         return null;
     }
 
-    public String getAuthorization() {
-        try {
-            log.info("通过RequestContextHolder获取ServletRequestAttributes");
-            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-            log.info("获取请求对象.");
-            HttpServletRequest request = attributes.getRequest();
-            log.info("获取请求授权密钥.");
-            String authorization = request.getHeader("Authorization");
-            log.info("授权密钥: " + authorization);
-            return authorization;
-        } catch (Exception ignore) {
-            log.info("登录密钥获取失败, 原因: " + ignore.getMessage());
-        }
-        return null;
-    }
-
 }

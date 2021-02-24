@@ -17,6 +17,8 @@
         <module>11002-blog-function-provider</module>
         <module>11003-async-task-provider</module>
         <module>11004-website-function-provider</module>
+        <module>12001-admin-function-consumer</module>
+        <module>12002-creator-function-consumer</module>
     </modules>
 
 

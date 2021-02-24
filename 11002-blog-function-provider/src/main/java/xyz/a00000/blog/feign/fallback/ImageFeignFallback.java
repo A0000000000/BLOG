@@ -16,7 +16,7 @@ public class ImageFeignFallback implements ImageFeign {
     private ResultCodeTools resultCodeTools;
 
     @Override
-    public BaseActionResult<Void> deleteImageByEssayId(Integer essayId, String authorization) {
+    public BaseActionResult<Void> deleteImageByEssayId(Integer essayId) {
         log.info("deleteImageByEssayId发生熔断.");
         BaseServiceResult<Void> result = BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
         return BaseActionResult.from(result, resultCodeTools);

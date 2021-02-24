@@ -16,6 +16,9 @@ public class GatewayConfig {
                 .route("blog_function_provider_route", r -> r.path("/api/blog/**").uri("lb://BLOG-FUNCTION-PROVIDER"))
                 .route("async_task_provider_route", r -> r.path("/api/async/**").uri("lb://ASYNC-TASK-PROVIDER"))
                 .route("website_function_provider_route", r -> r.path("/api/website/**").uri("lb://WEBSITE-FUNCTION-PROVIDER"))
+                .route("admin_function_consumer_route", r -> r.path("/api/admin/**").uri("lb://ADMIN-FUNCTION-CONSUMER"))
+                .route("creator_function_consumer_route", r -> r.path("/api/creator/**").uri("lb://CREATOR-FUNCTION-CONSUMER"))
+                .route("guest_function_consumer_route", r -> r.path("/api/guest/**").uri("lb://GUEST-FUNCTION-CONSUMER"))
                 .build();
     }
 

@@ -12,6 +12,6 @@ import xyz.a00000.blog.feign.fallback.ImageFeignFallback;
 public interface ImageFeign {
 
     @PostMapping("/deleteImageByEssayId")
-    BaseActionResult<Void> deleteImageByEssayId(@RequestParam("essayId") Integer essayId, @RequestParam("authorization") String authorization);
+    BaseActionResult<Void> deleteImageByEssayId(@RequestParam("essayId") Integer essayId);
 
 }

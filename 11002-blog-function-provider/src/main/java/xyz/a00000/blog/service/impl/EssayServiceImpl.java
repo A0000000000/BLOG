@@ -5,6 +5,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -172,7 +173,6 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
-
     @Override
     @HystrixCommand(fallbackMethod = "deleteEssay_fallback",
             commandProperties = {
@@ -181,10 +181,10 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<Void> deleteEssay(Essay essay, String authorization, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> deleteEssay(Essay essay, UserDetailsBean currentUserDetails) {
         log.info("准备删除一篇随笔.");
         log.info("校验参数.");
-        if (essay == null || authorization == null || essay.getId() == null) {
+        if (essay == null || essay.getId() == null) {
             return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
         }
         log.info("检查是否有权限删除.");
@@ -195,7 +195,7 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
             return BaseServiceResult.getFailedBean(new Exception("ACCESS_DENIED"), 7);
         }
         log.info("删除随笔相关的图片.");
-        BaseActionResult<Void> deleteImageResult = imageFeign.deleteImageByEssayId(essay.getId(), authorization);
+        BaseActionResult<Void> deleteImageResult = imageFeign.deleteImageByEssayId(essay.getId());
         if (deleteImageResult.getCode() != 0) {
             return BaseServiceResult.getFailedBean(new Exception(deleteImageResult.getMessage()), deleteImageResult.getCode());
         }
@@ -215,7 +215,7 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> deleteEssay_fallback(Essay essay, String authorization, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> deleteEssay_fallback(Essay essay, UserDetailsBean currentUserDetails) {
         log.info("updateEssay方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }

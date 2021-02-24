@@ -56,10 +56,8 @@ public class EssayController {
         log.info("删除一篇随笔.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
-        log.info("获取登录的用户密钥.");
-        String authorization = securityTools.getAuthorization();
         log.info("删除随笔.");
-        BaseServiceResult<Void> result = essayService.deleteEssay(essay, authorization, currentUserDetails);
+        BaseServiceResult<Void> result = essayService.deleteEssay(essay, currentUserDetails);
         log.info("删除成功, 准备返回.");
         return BaseActionResult.from(result, resultCodeTools);
     }
