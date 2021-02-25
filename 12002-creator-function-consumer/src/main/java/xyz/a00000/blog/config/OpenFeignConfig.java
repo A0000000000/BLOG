@@ -4,6 +4,7 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -24,7 +25,9 @@ public class OpenFeignConfig implements RequestInterceptor {
         log.info("获取请求授权密钥.");
         String authorization = request.getHeader("Authorization");
         log.info("授权密钥: " + authorization);
-        requestTemplate.header("Authorization", authorization);
+        if (!StringUtils.isEmpty(attributes)) {
+            requestTemplate.header("Authorization", authorization);
+        }
     }
 
 }

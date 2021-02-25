@@ -35,6 +35,7 @@ security:
       client-secret: A00000-blog-secret
       user-authorization-uri: http://localhost:10003/api/oauth/authorize
       access-token-uri: http://localhost:10003/api/oauth/token
+      grant-type: password
     resource:
       id: A00000-blog
       user-info-uri: A00000-blog

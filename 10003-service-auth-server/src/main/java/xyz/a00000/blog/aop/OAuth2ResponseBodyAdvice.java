@@ -3,6 +3,7 @@ package xyz.a00000.blog.aop;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
@@ -33,6 +34,7 @@ public class OAuth2ResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
         log.info("返回数据为: " + body);
+        response.setStatusCode(HttpStatus.OK);
         if (body == null || body.toString().contains("error")) {
             return BaseActionResult.from(body, 2, resultCodeTools);
         } else {
