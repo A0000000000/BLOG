@@ -94,14 +94,14 @@ public class EssayTagServiceImpl extends BaseServiceImpl<EssayTag, EssayTagMappe
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<Void> removeTag(EssayEssayTag essayEssayTag, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> removeTag(Integer id, UserDetailsBean currentUserDetails) {
         log.info("删除一条标签记录.");
         log.info("检查参数是否合法.");
-        if (essayEssayTag.getId() == null) {
+        if (id == null) {
             return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
         }
         log.info("加载待删除的完整信息.");
-        essayEssayTag = essayEssayTagMapper.selectById(essayEssayTag.getId());
+        EssayEssayTag essayEssayTag = essayEssayTagMapper.selectById(id);
         log.info("检查操作是否有权限.");
         QueryWrapper<EssayInfo> qwEssayInfo = new QueryWrapper<>();
         qwEssayInfo.eq("creator_id", currentUserDetails.getCreator().getId());
@@ -123,7 +123,7 @@ public class EssayTagServiceImpl extends BaseServiceImpl<EssayTag, EssayTagMappe
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> removeTag_fallback(EssayEssayTag essayEssayTag, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> removeTag_fallback(Integer id, UserDetailsBean currentUserDetails) {
         log.info("removeTag方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }

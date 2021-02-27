@@ -31,14 +31,36 @@ public class EssayTypeServiceImpl extends BaseServiceImpl<EssayType, EssayTypeMa
     private EssayInfoMapper essayInfoMapper;
 
     @Override
-    @HystrixCommand(fallbackMethod = "getEssayType_fallback",
+    @HystrixCommand(fallbackMethod = "selectAllEssayType_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<PageBean<EssayType>> getEssayType(PageForm<EssayType> form) {
+    public BaseServiceResult<List<EssayType>> selectAllEssayType(UserDetailsBean currentUserDetails) {
+        log.info("准备获取全部的类型信息.");
+        QueryWrapper<EssayType> qwEssayType = new QueryWrapper<>();
+        qwEssayType.eq("creator_id", currentUserDetails.getCreator().getId());
+        List<EssayType> essayTypes = u.selectList(qwEssayType);
+        log.info("获取完成, 准备返回.");
+        return BaseServiceResult.getSuccessBean(essayTypes);
+    }
+
+    public BaseServiceResult<List<EssayType>> selectAllEssayType_fallback(UserDetailsBean currentUserDetails) {
+        log.info("selectAllEssayType方法发生熔断.");
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+    }
+
+    @Override
+    @HystrixCommand(fallbackMethod = "getEssayTypeByForm_fallback",
+            commandProperties = {
+                    @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
+            })
+    public BaseServiceResult<PageBean<EssayType>> getEssayTypeByForm(PageForm<EssayType> form) {
         log.info("获取类型列表.");
         QueryWrapper<EssayType> qwEssayType = new QueryWrapper<>();
         qwEssayType.eq("creator_id", form.getConditions().getCreatorId());
@@ -52,8 +74,8 @@ public class EssayTypeServiceImpl extends BaseServiceImpl<EssayType, EssayTypeMa
         return BaseServiceResult.getSuccessBean(bean);
     }
 
-    public BaseServiceResult<PageBean<EssayType>> getEssayType_fallback(PageForm<Type> form) {
-        log.info("getEssayType方法发生熔断.");
+    public BaseServiceResult<PageBean<EssayType>> getEssayTypeByForm_fallback(PageForm<Type> form) {
+        log.info("getEssayTypeByForm方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
@@ -138,27 +160,27 @@ public class EssayTypeServiceImpl extends BaseServiceImpl<EssayType, EssayTypeMa
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "deleteEssayType_fallback",
+    @HystrixCommand(fallbackMethod = "deleteEssayTypeById_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<Void> deleteEssayType(EssayType type, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> deleteEssayTypeById(Integer id, UserDetailsBean currentUserDetails) {
         log.info("删除一条类型信息.");
         log.info("检查参数.");
-        if (type.getId() == null) {
+        if (id == null) {
             return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
         }
         log.info("加载待删除类型数据, 判断是否有权限删除.");
-        EssayType one = u.selectById(type.getId());
+        EssayType one = u.selectById(id);
         if (one == null || !currentUserDetails.getCreator().getId().equals(one.getCreatorId())) {
             return BaseServiceResult.getFailedBean(new Exception("ACCESS_DENIED"), 7);
         }
         log.info("判断是否能删除.");
         QueryWrapper<EssayInfo> qwEssayType = new QueryWrapper<>();
-        qwEssayType.eq("essay_type_id", type.getId());
+        qwEssayType.eq("essay_type_id", id);
         Integer num = essayInfoMapper.selectCount(qwEssayType);
         if (num != null && num.intValue() != 0) {
             return BaseServiceResult.getFailedBean(new Exception("HAS_DEPENDENT"), 10);
@@ -168,8 +190,8 @@ public class EssayTypeServiceImpl extends BaseServiceImpl<EssayType, EssayTypeMa
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> deleteEssayType_fallback(EssayType type, UserDetailsBean userDetailsBean) {
-        log.info("deleteEssayType方法发生熔断.");
+    public BaseServiceResult<Void> deleteEssayTypeById_fallback(Integer id, UserDetailsBean userDetailsBean) {
+        log.info("deleteEssayTypeById方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 

@@ -5,15 +5,14 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import xyz.a00000.blog.bean.cache.EssayInitCache;
 import xyz.a00000.blog.bean.common.BaseActionResult;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
-import xyz.a00000.blog.bean.dto.EssayInitResultBean;
 import xyz.a00000.blog.bean.dto.EssayInitParamsBean;
+import xyz.a00000.blog.bean.dto.EssayInitResultBean;
 import xyz.a00000.blog.bean.orm.*;
 import xyz.a00000.blog.bean.proxy.UserDetailsBean;
 import xyz.a00000.blog.component.CacheTools;
@@ -112,7 +111,7 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
         log.info("进入更新随笔方法.");
         log.info("加载缓存.");
         EssayInitCache essayInitCache = cacheTools.getEssayInitCache(params.getData().getCacheId());
-        if (essayInitCache == null) {
+        if (essayInitCache == null || essayInitCache.getEssay() == null || essayInitCache.getEssayInfo() == null) {
             log.info("加载缓存失败, 准备从数据库加载数据.");
             Essay essay = u.selectById(params.getData().getEssayId());
             log.info("判断随笔信息id是否存在来选择加载随笔信息加载方式.");
@@ -174,49 +173,49 @@ public class EssayServiceImpl extends BaseServiceImpl<Essay, EssayMapper> implem
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "deleteEssay_fallback",
+    @HystrixCommand(fallbackMethod = "deleteEssayById_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<Void> deleteEssay(Essay essay, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> deleteEssayById(Integer id, UserDetailsBean currentUserDetails) {
         log.info("准备删除一篇随笔.");
         log.info("校验参数.");
-        if (essay == null || essay.getId() == null) {
+        if (id == null) {
             return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
         }
         log.info("检查是否有权限删除.");
         QueryWrapper<EssayInfo> qwEssayInfo = new QueryWrapper<>();
-        qwEssayInfo.eq("essay_id", essay.getId());
+        qwEssayInfo.eq("essay_id", id);
         EssayInfo info = essayInfoMapper.selectOne(qwEssayInfo);
         if (info == null || !currentUserDetails.getCreator().getId().equals(info.getCreatorId())) {
             return BaseServiceResult.getFailedBean(new Exception("ACCESS_DENIED"), 7);
         }
         log.info("删除随笔相关的图片.");
-        BaseActionResult<Void> deleteImageResult = imageFeign.deleteImageByEssayId(essay.getId());
+        BaseActionResult<Void> deleteImageResult = imageFeign.deleteImageByEssayId(id);
         if (deleteImageResult.getCode() != 0) {
             return BaseServiceResult.getFailedBean(new Exception(deleteImageResult.getMessage()), deleteImageResult.getCode());
         }
         log.info("删除随笔相关的标签.");
         QueryWrapper<EssayEssayTag> qwEssayEssayTag = new QueryWrapper<>();
-        qwEssayEssayTag.eq("essay_id", essay.getId());
+        qwEssayEssayTag.eq("essay_id", id);
         essayEssayTagMapper.delete(qwEssayEssayTag);
         log.info("删除随笔相关的评论.");
         QueryWrapper<EssayComment> qwEssayComment = new QueryWrapper<>();
-        qwEssayComment.eq("essay_id", essay.getId());
+        qwEssayComment.eq("essay_id", id);
         essayCommentMapper.delete(qwEssayComment);
         log.info("删除随笔的附加信息.");
         essayInfoMapper.deleteById(info.getId());
         log.info("删除随笔.");
-        u.deleteById(essay.getId());
+        u.deleteById(id);
         log.info("返回结果数据.");
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> deleteEssay_fallback(Essay essay, UserDetailsBean currentUserDetails) {
-        log.info("updateEssay方法发生熔断.");
+    public BaseServiceResult<Void> deleteEssayById_fallback(Integer id, UserDetailsBean currentUserDetails) {
+        log.info("deleteEssayById方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 

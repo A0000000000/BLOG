@@ -13,7 +13,7 @@ public interface ImageService extends BaseService<Image, ImageMapper> {
 
     BaseServiceResult<List<Image>> uploadImage(MultipartFile[] images, Integer essayId, String password, UserDetailsBean currentUserDetails);
 
-    BaseServiceResult<Void> deleteImage(Integer id, UserDetailsBean currentUserDetails);
+    BaseServiceResult<Void> deleteImageById(Integer id, UserDetailsBean currentUserDetails);
 
     BaseServiceResult<Void> deleteImageByEssayId(Integer essayId, UserDetailsBean currentUserDetails);
 

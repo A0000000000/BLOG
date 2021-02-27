@@ -21,4 +21,5 @@ public class ImageFeignFallback implements ImageFeign {
         BaseServiceResult<Void> result = BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
         return BaseActionResult.from(result, resultCodeTools);
     }
+
 }

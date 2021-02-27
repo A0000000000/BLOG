@@ -22,4 +22,5 @@ public class EssayType implements Serializable {
     private String message;
     @TableField("create_time")
     private Date createTime;
+
 }

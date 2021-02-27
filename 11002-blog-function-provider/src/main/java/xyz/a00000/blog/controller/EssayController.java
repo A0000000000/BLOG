@@ -2,15 +2,11 @@ package xyz.a00000.blog.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.a00000.blog.bean.common.BaseActionResult;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
 import xyz.a00000.blog.bean.dto.EssayInitParamsBean;
 import xyz.a00000.blog.bean.dto.EssayInitResultBean;
-import xyz.a00000.blog.bean.orm.Essay;
 import xyz.a00000.blog.bean.proxy.UserDetailsBean;
 import xyz.a00000.blog.component.ResultCodeTools;
 import xyz.a00000.blog.component.SecurityTools;
@@ -40,7 +36,7 @@ public class EssayController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/updateEssay")
+    @PutMapping("/updateEssay")
     public BaseActionResult<String> updateEssay(@RequestBody EssayInitParamsBean params) {
         log.info("更新一篇随笔.");
         log.info("加载用户信息.");
@@ -51,13 +47,13 @@ public class EssayController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/deleteEssay")
-    public BaseActionResult<Void> deleteEssayById(@RequestBody Essay essay) {
+    @DeleteMapping("/deleteEssayById/{id}")
+    public BaseActionResult<Void> deleteEssayById(@PathVariable("id") Integer id) {
         log.info("删除一篇随笔.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
         log.info("删除随笔.");
-        BaseServiceResult<Void> result = essayService.deleteEssay(essay, currentUserDetails);
+        BaseServiceResult<Void> result = essayService.deleteEssayById(id, currentUserDetails);
         log.info("删除成功, 准备返回.");
         return BaseActionResult.from(result, resultCodeTools);
     }

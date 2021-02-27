@@ -9,6 +9,6 @@ public interface EssayCommentService extends BaseService<EssayComment, EssayComm
 
     BaseServiceResult<EssayComment> addComment(EssayComment essayComment);
 
-    BaseServiceResult<Void> removeComment(EssayComment essayComment, UserDetailsBean currentUserDetails);
+    BaseServiceResult<Void> removeComment(Integer id, UserDetailsBean currentUserDetails);
 
 }

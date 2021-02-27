@@ -2,10 +2,7 @@ package xyz.a00000.blog.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.a00000.blog.bean.common.BaseActionResult;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
 import xyz.a00000.blog.bean.common.PageBean;
@@ -15,6 +12,8 @@ import xyz.a00000.blog.bean.proxy.UserDetailsBean;
 import xyz.a00000.blog.component.ResultCodeTools;
 import xyz.a00000.blog.component.SecurityTools;
 import xyz.a00000.blog.service.EssayTypeService;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -29,12 +28,23 @@ public class EssayTypeController {
     @Autowired
     private EssayTypeService essayTypeService;
 
-    @PostMapping("/getEssayType")
-    public BaseActionResult<PageBean<EssayType>> getEssayType(@RequestBody PageForm<EssayType> form) {
+    @GetMapping("/getAllEssayType")
+    public BaseActionResult<List<EssayType>> getAllEssayType() {
+        log.info("获取全部的随笔类型数据.");
+        log.info("加载用户信息.");
+        UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
+        log.info("获取数据.");
+        BaseServiceResult<List<EssayType>> result = essayTypeService.selectAllEssayType(currentUserDetails);
+        log.info("获取完成, 准备返回.");
+        return BaseActionResult.from(result, resultCodeTools);
+    }
+
+    @PostMapping("/getEssayTypeByForm")
+    public BaseActionResult<PageBean<EssayType>> getEssayTypeByForm(@RequestBody PageForm<EssayType> form) {
         log.info("分页查询随笔类型信息.");
         form.getConditions().setCreatorId(securityTools.getCurrentUserDetails().getCreator().getId());
         log.info(String.format("page: %d, count: %d, creator: %d", form.getPage(), form.getCount(), form.getConditions().getCreatorId()));
-        BaseServiceResult<PageBean<EssayType>> result = essayTypeService.getEssayType(form);
+        BaseServiceResult<PageBean<EssayType>> result = essayTypeService.getEssayTypeByForm(form);
         return BaseActionResult.from(result, resultCodeTools);
     }
 
@@ -48,7 +58,7 @@ public class EssayTypeController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/updateEssayType")
+    @PutMapping("/updateEssayType")
     public BaseActionResult<EssayType> updateEssayType(@RequestBody EssayType type) {
         log.info("更新现有的类型.");
         log.info("加载用户信息.");
@@ -58,12 +68,12 @@ public class EssayTypeController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/deleteEssayType")
-    public BaseActionResult<Void> deleteEssayType(@RequestBody EssayType type) {
+    @DeleteMapping("/deleteEssayTypeById/{id}")
+    public BaseActionResult<Void> deleteEssayTypeById(@PathVariable("id") Integer id) {
         log.info("删除一条类型信息.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
-        BaseServiceResult<Void> result = essayTypeService.deleteEssayType(type, currentUserDetails);
+        BaseServiceResult<Void> result = essayTypeService.deleteEssayTypeById(id, currentUserDetails);
         log.info("删除完成, 准备返回.");
         return BaseActionResult.from(result, resultCodeTools);
     }

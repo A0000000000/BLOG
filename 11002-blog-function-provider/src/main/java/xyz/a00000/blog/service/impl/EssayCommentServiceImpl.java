@@ -59,13 +59,13 @@ public class EssayCommentServiceImpl extends BaseServiceImpl<EssayComment, Essay
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<Void> removeComment(EssayComment essayComment, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> removeComment(Integer id, UserDetailsBean currentUserDetails) {
         log.info("检查参数是否合法.");
-        if (essayComment.getId() == null) {
+        if (id == null) {
             return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
         }
         log.info("加载完整的数据.");
-        essayComment = u.selectById(essayComment.getId());
+        EssayComment essayComment = u.selectById(id);
         log.info("判断是否有权限删除.");
         if (essayComment == null) {
             return BaseServiceResult.getFailedBean(new Exception("ACCESS_DENIED"), 7);
@@ -80,7 +80,7 @@ public class EssayCommentServiceImpl extends BaseServiceImpl<EssayComment, Essay
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> removeComment_fallback(EssayComment essayComment, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> removeComment_fallback(Integer id, UserDetailsBean currentUserDetails) {
         log.info("removeComment方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }

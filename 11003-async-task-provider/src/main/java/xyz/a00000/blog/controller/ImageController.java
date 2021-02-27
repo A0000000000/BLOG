@@ -38,19 +38,19 @@ public class ImageController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/deleteImage")
-    public BaseActionResult<Void> deleteImage(@RequestParam("id") Integer id) {
+    @DeleteMapping("/deleteImageById/{id}")
+    public BaseActionResult<Void> deleteImageById(@PathVariable("id") Integer id) {
         log.info("根据图片id删除一张图片.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();
         log.info("删除图片.");
-        BaseServiceResult<Void> result = imageService.deleteImage(id, currentUserDetails);
+        BaseServiceResult<Void> result = imageService.deleteImageById(id, currentUserDetails);
         log.info("删除操作完成, 返回结果.");
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/deleteImageByEssayId")
-    public BaseActionResult<Void> deleteImageByEssayId(@RequestParam("essayId") Integer essayId) {
+    @DeleteMapping("/deleteImageByEssayId/{id}")
+    public BaseActionResult<Void> deleteImageByEssayId(@PathVariable("id") Integer essayId) {
         log.info("根据随笔id删除随笔的图片.");
         log.info("加载用户信息.");
         UserDetailsBean currentUserDetails = securityTools.getCurrentUserDetails();

@@ -116,14 +116,14 @@ public class ImageServiceImpl extends BaseServiceImpl<Image, ImageMapper> implem
     }
 
     @Override
-    @HystrixCommand(fallbackMethod = "deleteImage_fallback",
+    @HystrixCommand(fallbackMethod = "deleteImageById_fallback",
             commandProperties = {
                     @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
                     @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<Void> deleteImage(Integer id, UserDetailsBean currentUserDetails) {
+    public BaseServiceResult<Void> deleteImageById(Integer id, UserDetailsBean currentUserDetails) {
         log.info("准备删除图片.");
         log.info("加载被删除图片的数据.");
         Image image = u.selectById(id);
@@ -149,8 +149,8 @@ public class ImageServiceImpl extends BaseServiceImpl<Image, ImageMapper> implem
         return BaseServiceResult.getSuccessBean(null);
     }
 
-    public BaseServiceResult<Void> deleteImage_fallback(Integer id, UserDetailsBean currentUserDetails) {
-        log.info("deleteImage方法发生熔断.");
+    public BaseServiceResult<Void> deleteImageById_fallback(Integer id, UserDetailsBean currentUserDetails) {
+        log.info("deleteImageById方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 
