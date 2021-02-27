@@ -25,7 +25,7 @@ public class OpenFeignConfig implements RequestInterceptor {
         log.info("获取请求授权密钥.");
         String authorization = request.getHeader("Authorization");
         log.info("授权密钥: " + authorization);
-        if (!StringUtils.isEmpty(attributes)) {
+        if (!StringUtils.isEmpty(authorization)) {
             requestTemplate.header("Authorization", authorization);
         }
     }

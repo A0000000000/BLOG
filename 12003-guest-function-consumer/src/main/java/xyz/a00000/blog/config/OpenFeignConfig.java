@@ -28,6 +28,16 @@ public class OpenFeignConfig implements RequestInterceptor {
         if (!StringUtils.isEmpty(authorization)) {
             requestTemplate.header("Authorization", authorization);
         }
+        log.info("加载发送邮件所需的token.");
+        String token = request.getHeader("token");
+        if (!StringUtils.isEmpty(token)) {
+            requestTemplate.header("token", token);
+        }
+        log.info("加载发送邮件所需的key.");
+        String key = request.getHeader("key");
+        if (!StringUtils.isEmpty(key)) {
+            requestTemplate.header("key", key);
+        }
     }
 
 }

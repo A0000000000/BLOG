@@ -19,6 +19,7 @@
         <module>11004-website-function-provider</module>
         <module>12001-admin-function-consumer</module>
         <module>12002-creator-function-consumer</module>
+        <module>12003-guest-function-consumer</module>
     </modules>
 
 
