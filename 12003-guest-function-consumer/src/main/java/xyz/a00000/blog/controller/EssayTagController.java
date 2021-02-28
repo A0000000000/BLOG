@@ -24,7 +24,7 @@ public class EssayTagController {
     public BaseActionResult<List<EssayTag>> getEssayTags(@PathVariable("id") Integer essayId) {
         log.info("加载一篇随笔的标签信息.");
         BaseActionResult<List<EssayTag>> result = essayTagService.getEssayTags(essayId);
-        log.info("加载完成, 准备返回/");
+        log.info("加载完成, 准备返回.");
         return result;
     }
 
