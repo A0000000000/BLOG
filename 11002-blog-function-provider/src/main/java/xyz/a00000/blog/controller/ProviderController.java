@@ -2,10 +2,7 @@ package xyz.a00000.blog.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.a00000.blog.bean.common.BaseActionResult;
 import xyz.a00000.blog.bean.common.BaseServiceResult;
 import xyz.a00000.blog.bean.common.PageBean;
@@ -40,18 +37,18 @@ public class ProviderController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/getEssayData")
-    public BaseActionResult<EssayProxyBean> getEssayData(@RequestBody EssayInfo essayInfo) {
+    @GetMapping("/getEssayData")
+    public BaseActionResult<EssayProxyBean> getEssayData(@RequestParam("essayId") Integer essayId, @RequestParam(value = "password", required = false) String password) {
         log.info("查询一篇随笔的信息.");
-        BaseServiceResult<EssayProxyBean> result = providerService.getEssayData(essayInfo);
+        BaseServiceResult<EssayProxyBean> result = providerService.getEssayData(essayId, password);
         log.info("查询完成, 准备返回数据.");
         return BaseActionResult.from(result, resultCodeTools);
     }
 
-    @PostMapping("/getEssayTags")
-    public BaseActionResult<List<EssayTag>> getEssayTags(@RequestBody Essay essay) {
+    @GetMapping("/getEssayTags/{id}")
+    public BaseActionResult<List<EssayTag>> getEssayTags(@PathVariable("id") Integer essayId) {
         log.info("查询一篇随笔的标签.");
-        BaseServiceResult<List<EssayTag>> result = providerService.getEssayTags(essay);
+        BaseServiceResult<List<EssayTag>> result = providerService.getEssayTags(essayId);
         log.info("查询完成, 准备返回.");
         return BaseActionResult.from(result, resultCodeTools);
     }

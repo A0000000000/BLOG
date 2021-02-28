@@ -223,7 +223,7 @@ public class ImageServiceImpl extends BaseServiceImpl<Image, ImageMapper> implem
             log.info("获得待访问的图片信息.");
             Image image = u.selectById(id);
             log.info("判断是否有权限访问.");
-            if (!StringUtils.isEmpty(image.getPassword()) && !image.getPassword().equals(password)) {
+            if (image == null || !StringUtils.isEmpty(image.getPassword()) && !image.getPassword().equals(password)) {
                 return BaseServiceResult.getFailedBean(new Exception("ACCESS_DENIED"), 7);
             }
             log.info("获得上传文件的用户, 以得到文件所在的文件桶.");

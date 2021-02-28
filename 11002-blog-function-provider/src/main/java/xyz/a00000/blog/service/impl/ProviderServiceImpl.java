@@ -91,14 +91,14 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<EssayProxyBean> getEssayData(EssayInfo essayInfo) {
+    public BaseServiceResult<EssayProxyBean> getEssayData(Integer essayId, String password) {
         log.info("获取随笔数据.");
         log.info("校验参数是否合法.");
-        if (essayInfo.getEssayId() == null) {
+        if (essayId == null) {
             return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
         }
         log.info("加载随笔数据.");
-        Essay essay = essayMapper.selectById(essayInfo.getEssayId());
+        Essay essay = essayMapper.selectById(essayId);
         if (essay == null) {
             return BaseServiceResult.getFailedBean(new Exception("NO_RECORD"), 9);
         }
@@ -106,7 +106,7 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
         QueryWrapper<EssayInfo> qwEssayInfo = new QueryWrapper<>();
         qwEssayInfo.eq("essay_id", essay.getId());
         EssayInfo one = u.selectOne(qwEssayInfo);
-        if (!StringUtils.isEmpty(one.getPassword()) && !one.getPassword().equals(essayInfo.getPassword())) {
+        if (!StringUtils.isEmpty(one.getPassword()) && !one.getPassword().equals(password)) {
             return BaseServiceResult.getFailedBean(new Exception("ACCESS_DENIED"), 7);
         }
         log.info("加载随笔类型数据.");
@@ -114,7 +114,7 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
         return BaseServiceResult.getSuccessBean(new EssayProxyBean(essay, one, type));
     }
 
-    public BaseServiceResult<EssayProxyBean> getEssayData_fallback(EssayInfo essayInfo) {
+    public BaseServiceResult<EssayProxyBean> getEssayData_fallback(Integer essayId, String password) {
         log.info("getEssayData方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
@@ -127,19 +127,19 @@ public class ProviderServiceImpl extends BaseServiceImpl<EssayInfo, EssayInfoMap
                     @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
                     @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
             })
-    public BaseServiceResult<List<EssayTag>> getEssayTags(Essay essay) {
+    public BaseServiceResult<List<EssayTag>> getEssayTags(Integer essayId) {
         log.info("获取随笔的标签.");
         log.info("检查参数是否合法.");
-        if (essay.getId() == null) {
+        if (essayId == null) {
             return BaseServiceResult.getFailedBean(new Exception("EMPTY_ARGS"), 5);
         }
         log.info("加载标签数据.");
-        List<EssayTag> data = essayTagMapper.selectByEssayId(essay.getId());
+        List<EssayTag> data = essayTagMapper.selectByEssayId(essayId);
         log.info("返回标签数据.");
         return BaseServiceResult.getSuccessBean(data);
     }
 
-    public BaseServiceResult<List<EssayTag>> getEssayTags_fallback(Essay essay) {
+    public BaseServiceResult<List<EssayTag>> getEssayTags_fallback(Integer essayId) {
         log.info("getEssayTags方法发生熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }

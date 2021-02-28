@@ -17,9 +17,9 @@ public interface ProviderService extends BaseService<EssayInfo, EssayInfoMapper>
 
     BaseServiceResult<PageBean<EssayQueryBean>> getEssayList(PageForm<EssayInfo> form);
 
-    BaseServiceResult<EssayProxyBean> getEssayData(EssayInfo essayInfo);
+    BaseServiceResult<EssayProxyBean> getEssayData(Integer essayInfo, String password);
 
-    BaseServiceResult<List<EssayTag>> getEssayTags(Essay essay);
+    BaseServiceResult<List<EssayTag>> getEssayTags(Integer essayId);
 
     BaseServiceResult<PageBean<EssayComment>> getEssayComments(PageForm<EssayComment> form);
 

@@ -3,16 +3,9 @@
 <mapper namespace="xyz.a00000.blog.mapper.EssayTagMapper">
     <select id="selectByEssayId" parameterType="java.lang.Integer" resultType="xyz.a00000.blog.bean.orm.EssayTag">
         select
-               id,
-               creator_id as creatorId,
-               tag_name as tagName,
-               create_time as createTime
-        from essay_tag
-        where id in (
-            select
-                   essay_tag_id
-            from essay_essay_tag
-            where essay_id = #{essayId}
-            )
+               essay_essay_tag.id as id, creator_id as creatorId, tag_name as tagName, essay_essay_tag.create_time as createTime
+        from essay_tag inner join essay_essay_tag
+            on essay_tag.id = essay_essay_tag.essay_tag_id
+        where essay_essay_tag.essay_id = #{essayId}
     </select>
 </mapper>
