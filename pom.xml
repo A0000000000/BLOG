@@ -105,7 +105,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <outputDirectory>
+                        D:/dev/PROD
+                    </outputDirectory>
+                </configuration>
             </plugin>
+
         </plugins>
     </build>
 
