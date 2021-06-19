@@ -27,6 +27,14 @@ public class UserController {
         return result;
     }
 
+    @PostMapping("/refresh")
+    public BaseActionResult<Map<String, Object>> refresh(@RequestBody Map<String, String> params) {
+        log.info("用户登录.");
+        BaseActionResult<Map<String, Object>> result = userService.refresh(params);
+        log.info("登录完成, 准备返回密钥.");
+        return result;
+    }
+
     @PostMapping("/register")
     public BaseActionResult<UserView> register(@RequestBody RegisterParams params) {
         log.info("用户注册.");

@@ -31,13 +31,15 @@ public class UserServiceImpl implements UserService {
     private String clientId;
     @Value("${security.oauth2.client.client-secret}")
     private String clientSecret;
-    @Value("${security.oauth2.client.grant-type}")
-    private String grantType;
+    @Value("${security.oauth2.client.grant-type.login}")
+    private String loginGrantType;
+    @Value("${security.oauth2.client.grant-type.refresh}")
+    private String refreshGrantType;
 
     @Override
     public BaseActionResult<Map<String, Object>> login(Creator creator) {
         log.info("准备请求远程服务器登录.");
-        BaseActionResult<Map<String, Object>> result = oAuthFeign.login(clientId, clientSecret, grantType, creator.getUsername(), creator.getPassword());
+        BaseActionResult<Map<String, Object>> result = oAuthFeign.login(clientId, clientSecret, loginGrantType, creator.getUsername(), creator.getPassword());
         log.info("请求完成, 准备返回.");
         return result;
     }
@@ -55,6 +57,15 @@ public class UserServiceImpl implements UserService {
         log.info("准备请求远程服务进行注册.");
         BaseActionResult<UserView> result = creatorFeign.updateUserInfo(params);
         log.info("请求完成, 准备返回.");
+        return result;
+    }
+
+    @Override
+    public BaseActionResult<Map<String, Object>> refresh(Map<String, String> params) {
+        log.info("准备请求远程服务进行刷新token");
+        String token = params.get("token");
+        BaseActionResult<Map<String, Object>> result = oAuthFeign.refresh(clientId, clientSecret, refreshGrantType, token);
+        log.info("刷新完成, 准备返回.");
         return result;
     }
 

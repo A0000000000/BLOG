@@ -11,7 +11,7 @@ spring:
       max-request-size: 100MB
   cloud:
     config:
-      uri: http://localhost:10002
+      uri: http://config.center.ip:10002
       name: config
       profile: prod
     gateway:
@@ -29,7 +29,7 @@ eureka:
     hostname: service-gateway
   client:
     service-url:
-      defaultZone: http://localhost:10001/eureka
+      defaultZone: http://register.center.ip:10001/eureka
 management:
   endpoints:
     web:

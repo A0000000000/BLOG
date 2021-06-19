@@ -24,3 +24,5 @@ target
 hs_err_pid*
 
 /10002-service-config-center/src/main/resources/config/config-prod.yml
+.project
+/.settings

@@ -16,4 +16,6 @@ public interface UserService {
 
     BaseActionResult<UserView> updateUserInfo(RegisterParams params);
 
+    BaseActionResult<Map<String, Object>> refresh(Map<String, String> params);
+
 }

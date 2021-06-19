@@ -11,7 +11,7 @@ spring:
         native:
           search-locations: classpath:/config
   rabbitmq:
-    host: 192.168.99.100
+    host: rabbitmq.ip
     port: 20002
     username: guest
     password: guest
@@ -20,7 +20,7 @@ eureka:
     hostname: service-config-center
   client:
     service-url:
-      defaultZone: http://localhost:10001/eureka
+      defaultZone: http://register.center.ip:10001/eureka
 management:
   endpoints:
     web:

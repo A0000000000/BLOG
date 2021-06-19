@@ -9,7 +9,7 @@ spring:
     add-mappings: false
   cloud:
     config:
-      uri: http://localhost:10002
+      uri: http://config.center.ip:10002
       name: config
       profile: prod
   rabbitmq:
@@ -38,7 +38,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:10001/eureka
+      defaultZone: http://register.center.ip:10001/eureka
 management:
   endpoints:
     web:
@@ -49,13 +49,13 @@ security:
     client:
       client-id: A00000-blog
       client-secret: A00000-blog-secret
-      user-authorization-uri: http://localhost:10003/api/oauth/authorize
-      access-token-uri: http://localhost:10003/api/oauth/token
+      user-authorization-uri: http://auth.center.ip:10003/api/oauth/authorize
+      access-token-uri: http://auth.center.ip:10003/api/oauth/token
     resource:
       id: A00000-blog
       user-info-uri: A00000-blog
     authorization:
-      check-token-access: http://localhost:10003/api/oauth/check_token
+      check-token-access: http://auth.center.ip:10003/api/oauth/check_token
 mybatis-plus:
   config-location: classpath:/mybatis-config.xml
   mapper-locations: classpath:/mapper/*Mapper.xml

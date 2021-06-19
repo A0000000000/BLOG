@@ -9,7 +9,7 @@ spring:
     add-mappings: false
   cloud:
     config:
-      uri: http://localhost:10002
+      uri: http://config.center.ip:10002
       name: config
       profile: prod
   rabbitmq:
@@ -38,7 +38,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:10001/eureka
+      defaultZone: http://register.center.ip:10001/eureka
 management:
   endpoints:
     web:

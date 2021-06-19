@@ -38,7 +38,7 @@ public class GlobalException {
         }
         res.setCode(codeContrast.getCode());
         res.setMessage(codeContrast.getMessage());
-        res.setData(e);
+//        res.setData(e);
         log.info("构建完成, 返回");
         return res;
     }

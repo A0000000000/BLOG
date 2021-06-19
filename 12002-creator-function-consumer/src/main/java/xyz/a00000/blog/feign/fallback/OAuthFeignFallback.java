@@ -25,4 +25,10 @@ public class OAuthFeignFallback implements OAuthFeign {
         log.info("login方法发生熔断.");
         return getFallbackBean();
     }
+
+    @Override
+    public BaseActionResult<Map<String, Object>> refresh(String clientId, String clientSecret, String grantType, String token) {
+        log.info("refresh方法发生熔断.");
+        return getFallbackBean();
+    }
 }

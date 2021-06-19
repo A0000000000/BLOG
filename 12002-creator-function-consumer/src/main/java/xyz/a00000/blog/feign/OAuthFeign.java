@@ -16,4 +16,7 @@ public interface OAuthFeign {
     @PostMapping("/token")
     BaseActionResult<Map<String, Object>> login(@RequestParam("client_id") String clientId, @RequestParam("client_secret") String clientSecret, @RequestParam("grant_type") String grantType, @RequestParam("username") String username, @RequestParam("password") String password);
 
+    @PostMapping("/token")
+    BaseActionResult<Map<String, Object>> refresh(@RequestParam("client_id") String clientId, @RequestParam("client_secret") String clientSecret, @RequestParam("grant_type") String grantType, @RequestParam("refresh_token") String token);
+
 }

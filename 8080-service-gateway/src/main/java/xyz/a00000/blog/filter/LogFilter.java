@@ -25,6 +25,7 @@ public class LogFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        long startTime = System.currentTimeMillis();
         try {
             log.info("获取网关访问的地址和ip");
             ServerHttpRequest request = exchange.getRequest();
@@ -53,6 +54,8 @@ public class LogFilter implements GlobalFilter, Ordered {
         }
         Mono<Void> filter = chain.filter(exchange);
         log.info("拦截完成.");
+        long endTime = System.currentTimeMillis();
+        log.info("请求完成, 准备返回, 请求执行时间: " + (endTime - startTime));
         return filter;
     }
 
