@@ -25,4 +25,10 @@ public class CreatorFeignFallback implements CreatorFeign {
         log.info("updateUserInfo发生熔断.");
         return getFallbackBean();
     }
+
+    @Override
+    public BaseActionResult<UserView> getUserInfo() {
+        log.info("getUserInfo发生熔断.");
+        return getFallbackBean();
+    }
 }

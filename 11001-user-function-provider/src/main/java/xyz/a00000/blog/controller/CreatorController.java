@@ -31,4 +31,12 @@ public class CreatorController {
         return BaseActionResult.from(result, resultCodeTools);
     }
 
+    @GetMapping("/getUserInfo")
+    public BaseActionResult<UserView> getUserInfo() {
+        log.info("获取登录用户信息.");
+        BaseServiceResult<UserView> result = creatorService.getUserInfo(securityTools.getCurrentUserDetails());
+        log.info("获取完成, 准备返回.");
+        return BaseActionResult.from(result, resultCodeTools);
+    }
+
 }

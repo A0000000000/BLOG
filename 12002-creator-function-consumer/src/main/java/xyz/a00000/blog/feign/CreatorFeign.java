@@ -2,6 +2,7 @@ package xyz.a00000.blog.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import xyz.a00000.blog.bean.common.BaseActionResult;
@@ -15,5 +16,8 @@ public interface CreatorFeign {
 
     @PutMapping("/updateUserInfo")
     BaseActionResult<UserView> updateUserInfo(@RequestBody RegisterParams params);
+
+    @GetMapping("/getUserInfo")
+    BaseActionResult<UserView> getUserInfo();
 
 }

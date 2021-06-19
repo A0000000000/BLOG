@@ -59,7 +59,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/api/creator/user/login", "/api/creator/user/register").permitAll()
+                .antMatchers("/api/creator/user/login", "/api/creator/user/register", "/api/creator/user/refresh").permitAll()
                 .antMatchers("/api/creator/**").hasRole("CREATOR")
                 .anyRequest().permitAll()
                 .and()

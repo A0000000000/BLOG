@@ -13,4 +13,6 @@ public interface CreatorService extends BaseService<Creator, CreatorMapper> {
 
     BaseServiceResult<UserView> updateCreatorInfo(RegisterParams params, UserDetailsBean currentUserDetails);
 
+    BaseServiceResult<UserView> getUserInfo(UserDetailsBean currentUserDetails);
+
 }

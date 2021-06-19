@@ -18,4 +18,6 @@ public interface UserService {
 
     BaseActionResult<Map<String, Object>> refresh(Map<String, String> params);
 
+    BaseActionResult<UserView> getUserInfo();
+
 }

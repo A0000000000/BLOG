@@ -51,4 +51,12 @@ public class UserController {
         return result;
     }
 
+    @GetMapping("/getUserInfo")
+    public BaseActionResult<UserView> getUserInfo() {
+        log.info("获取登录用户信息.");
+        BaseActionResult<UserView> result = userService.getUserInfo();
+        log.info("获取完成, 准备返回.");
+        return result;
+    }
+
 }

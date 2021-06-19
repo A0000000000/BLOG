@@ -21,4 +21,9 @@ public class AuthorityBean implements GrantedAuthority, Serializable {
     public String getAuthority() {
         return this.authority.getAuthorityName();
     }
+
+    public Authority toAuthorityObject() {
+        return this.authority;
+    }
+
 }

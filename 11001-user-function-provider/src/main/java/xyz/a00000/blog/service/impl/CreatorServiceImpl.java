@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import xyz.a00000.blog.bean.orm.Authority;
 import xyz.a00000.blog.bean.orm.Creator;
 import xyz.a00000.blog.bean.orm.CreatorAuthority;
 import xyz.a00000.blog.bean.orm.CreatorInfo;
+import xyz.a00000.blog.bean.proxy.AuthorityBean;
 import xyz.a00000.blog.bean.proxy.UserDetailsBean;
 import xyz.a00000.blog.mapper.AuthorityMapper;
 import xyz.a00000.blog.mapper.CreatorAuthorityMapper;
@@ -25,7 +27,9 @@ import xyz.a00000.blog.mapper.CreatorInfoMapper;
 import xyz.a00000.blog.mapper.CreatorMapper;
 import xyz.a00000.blog.service.CreatorService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -147,6 +151,40 @@ public class CreatorServiceImpl extends BaseServiceImpl<Creator, CreatorMapper> 
 
     public BaseServiceResult<UserView> updateCreatorInfo_fallback(RegisterParams params, UserDetailsBean currentUserDetails) {
         log.info("updateCreatorInfo触发熔断, 参数: " + params);
+        return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
+    }
+
+    @Override
+    @HystrixCommand(fallbackMethod = "getUserInfo_fallback",
+            commandProperties = {
+                    @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "20"),
+                    @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000"),
+                    @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50")
+            })
+    public BaseServiceResult<UserView> getUserInfo(UserDetailsBean currentUserDetails) {
+        log.info("获取用户信息.");
+        log.info("获取Creator信息.");
+        Creator creator = currentUserDetails.getCreator();
+        creator.setPassword(null);
+        log.info("获取CreatorInfo信息.");
+        CreatorInfo creatorInfo = currentUserDetails.getCreatorInfo();
+        log.info("获取权限列表.");
+        Collection<? extends GrantedAuthority> authoritiesCollection = currentUserDetails.getAuthorities();
+        List<Authority> authorities = new ArrayList<>();
+        if (authoritiesCollection != null) {
+            authoritiesCollection.forEach(item -> {
+                if (item instanceof AuthorityBean authorityBean) {
+                    authorities.add(authorityBean.toAuthorityObject());
+                }
+            });
+        }
+        log.info("获取完成, 准备返回.");
+        return BaseServiceResult.getSuccessBean(new UserView(creator, creatorInfo, authorities));
+    }
+
+    public BaseServiceResult<UserView> getUserInfo_fallback(UserDetailsBean currentUserDetails) {
+        log.info("getUserInfo触发熔断.");
         return BaseServiceResult.getFailedBean(new Exception("SERVICE_FALLBACK"), 3);
     }
 

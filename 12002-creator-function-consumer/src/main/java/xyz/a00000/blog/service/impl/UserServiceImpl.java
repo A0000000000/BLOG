@@ -69,4 +69,12 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    @Override
+    public BaseActionResult<UserView> getUserInfo() {
+        log.info("请求远程服务, 获取登录用户的信息");
+        BaseActionResult<UserView> result = creatorFeign.getUserInfo();
+        log.info("获取完成, 准备返回.");
+        return result;
+    }
+
 }
